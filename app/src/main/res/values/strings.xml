@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Story Life</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="NumberVerificationTitle">How about you get started <br></br> with your <b>Story Life</b>  first? </string>
+    <string name="mobilenumber">Mobile Number</string>
+    <string name="NumberText">By Continuing you may receive an SMS for verification. Message and data rated may apply.</string>
+    <string name="EmptryNumberError">Mobile Number cannot be Empty</string>
+    <string name="NumberValidError">Number is Not Valid</string>
+    <string name="email_address">Email Address</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="ErrorEmail">Email Address cannot be empty</string>
+    <string name="ErrorPassword">Password cannot be Empty</string>
+    <string name="visible">visible</string>
+    <string name="nonvisible">nonVisible</string>
+    <string name="your_name">Your Name</string>
+    <string name="lets_go">Lets Go</string>
+    <string name="my_journals">My Journals</string>
+    <string name="more">More</string>
+    <string name="doodle_store">Doodle Store</string>
+    <string name="artist_panel">Artist Panel</string>
+    <string name="more_information">More Information</string>
+    <string name="share">Share</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="log_out">Log Out</string>
+    <string name="support">Support</string>
+    <string name="privacy">Privacy</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="daily_exercise">Daily Exercise</string>
+    <string name="journal">Journal</string>
+    <string name="people">People</string>
+    <string name="approved_art">Approved Art</string>
+</resources>

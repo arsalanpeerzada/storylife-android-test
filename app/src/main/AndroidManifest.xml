@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.storylife">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.StoryLife">
+        <activity
+            android:name=".UI.Activities.ArtistDashboard"
+            android:exported="false" />
+        <activity
+            android:name=".UI.Activities.ArtisePanel"
+            android:exported="false" />
+        <activity
+            android:name=".UI.Activities.People"
+            android:exported="false" />
+        <activity
+            android:name=".UI.Activities.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UI.Activities.DoodleStore"
+            android:exported="false" />
+        <activity
+            android:name=".UI.Activities.ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UI.Activities.ViewAll"
+            android:exported="false" />
+        <activity
+            android:name=".UI.Activities.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UI.Activities.StartingActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".UI.Activities.SplashActivity"
+            android:exported="true" />
+        <activity
+            android:name=".UI.Activities.MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustNothing">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
