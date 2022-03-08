@@ -9,10 +9,11 @@
         tools:context=".UI.Activities.DoodleStore">
 
         <ImageView
+            android:layout_marginTop="@dimen/dimen_30dp"
             android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_8sdp"
+            android:layout_marginStart="@dimen/_8sdp"
             android:padding="@dimen/_8sdp"
             android:src="@drawable/back"
             app:layout_constraintStart_toStartOf="parent"
@@ -22,14 +23,31 @@
             android:id="@+id/editText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginStart="@dimen/_16sdp"
             android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/sfheavy"
             android:text="@string/doodle_store"
             android:textColor="@color/black"
-            android:textSize="@dimen/_16sdp"
+            android:textSize="@dimen/_24sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/back" />
+
+        <EditText
+            android:imeOptions="actionSearch"
+            android:maxLines="1"
+            android:inputType="text"
+            android:layout_height="35dp"
+            android:id="@+id/search"
+            android:layout_width="0dp"
+            android:background="@drawable/round_border_edittext_search"
+            android:layout_marginHorizontal="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_18sdp"
+            android:hint="@string/search"
+            android:drawableStart="@drawable/ic_baseline_search_24"
+            android:paddingStart="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText" />
 
 
         <include
@@ -37,10 +55,10 @@
             layout="@layout/tablayout_1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_26sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editText" />
+            app:layout_constraintTop_toBottomOf="@+id/search" />
 
 
         <androidx.viewpager.widget.ViewPager

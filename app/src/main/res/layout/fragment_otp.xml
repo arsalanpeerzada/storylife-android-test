@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".UI.Fragments.FragmentOtp">
@@ -12,8 +13,9 @@
             android:id="@+id/imageView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginStart="@dimen/_8sdp"
             android:layout_marginTop="@dimen/_16sdp"
+            android:padding="@dimen/_8sdp"
             android:src="@drawable/back"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -22,9 +24,9 @@
             android:id="@+id/fragmentotptitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_32sdp"
-            android:layout_marginEnd="@dimen/_60sdp"
+            android:layout_marginStart="@dimen/margin_leftside"
+            android:layout_marginTop="@dimen/_45sdp"
+            android:layout_marginEnd="@dimen/_50sdp"
             android:fontFamily="@font/sfbold"
             android:text="Enter the 6-digit code sent to you at"
             android:textColor="@color/black"
@@ -35,21 +37,15 @@
 
 
         <com.mukesh.OtpView
+
             android:id="@+id/otp_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_22sdp"
-            android:inputType="number"
-            android:textAllCaps="true"
-            android:textColor="@color/appBlue"
-            android:theme="@style/AppTheme"
-            app:OtpHideLineWhenFilled="true"
-            app:OtpItemCount="6"
-            app:OtpItemHeight="60dp"
-            app:OtpItemSpacing="10dp"
+            android:layout_marginTop="@dimen/_45sdp"
+            android:inputType="phone"
+            android:focusableInTouchMode="true"
             app:OtpItemWidth="40dp"
-            app:OtpLineColor="@color/appBlue"
-            app:OtpState_filled="false"
+            app:OtpItemCount="6"
             app:OtpViewType="line"
             app:layout_constraintEnd_toEndOf="@+id/fragmentotptitle"
             app:layout_constraintStart_toStartOf="@+id/fragmentotptitle"
@@ -57,12 +53,13 @@
 
 
         <TextView
-            android:textSize="@dimen/_14sdp"
+            android:id="@+id/timer"
+            android:textSize="@dimen/_12sdp"
             android:fontFamily="@font/sfmedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_16sdp"
-            android:layout_marginBottom="@dimen/_16sdp"
+            android:layout_marginStart="@dimen/_25sdp"
+            android:layout_marginBottom="@dimen/_30sdp"
             android:text="Resend Code in 0:15"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

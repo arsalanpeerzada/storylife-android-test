@@ -7,7 +7,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".UI.Fragments.Dashboard_Approved">
+        tools:context=".UI.Fragments.DashboardApproved">
 
         <androidx.recyclerview.widget.RecyclerView
             tools:listitem="@layout/item_dashboardapproved"

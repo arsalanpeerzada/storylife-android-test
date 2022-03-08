@@ -8,27 +8,22 @@
 
     <fragment
         android:id="@+id/numberVerify"
-        android:name="com.storylife.UI.Fragments.NumberVerify"
+        android:name="com.inksy.UI.Fragments.NumberVerify"
         android:label="NumberVerify"
         tools:layout="@layout/fragment_number_verify">
         <action
             android:id="@+id/action_numberVerify_to_fragmentOtp"
             app:destination="@id/fragmentOtp"
-
             app:enterAnim="@anim/left"
             app:exitAnim="@anim/left2" />
-        <argument
-            android:name="MobileNumber"
-            app:argType="string" />
+
     </fragment>
     <fragment
         android:id="@+id/fragmentOtp"
-        android:name="com.storylife.UI.Fragments.FragmentOtp"
+        android:name="com.inksy.UI.Fragments.FragmentOtp"
         android:label="FragmentOtp"
         tools:layout="@layout/fragment_otp">
-        <argument
-            android:name="mobilenumber"
-            app:argType="string" />
+
         <action
             android:id="@+id/action_fragmentOtp_to_numberVerify"
             app:destination="@id/numberVerify"
@@ -39,13 +34,13 @@
             app:destination="@id/login"
             app:enterAnim="@anim/left"
             app:exitAnim="@anim/left2" />
-
     </fragment>
     <fragment
         android:id="@+id/login"
-        android:name="com.storylife.UI.Fragments.Login"
+        android:name="com.inksy.UI.Fragments.Login"
         android:label="Login"
         tools:layout="@layout/fragment_login">
+
 
         <action
             android:id="@+id/action_login_to_bio"
@@ -58,7 +53,7 @@
     </fragment>
     <fragment
         android:id="@+id/bio"
-        android:name="com.storylife.UI.Fragments.Bio"
+        android:name="com.inksy.UI.Fragments.Bio"
         android:label="Bio"
         tools:layout="@layout/fragment_bio">
         <action

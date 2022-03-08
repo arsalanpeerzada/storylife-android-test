@@ -18,12 +18,12 @@
                 android:id="@+id/textView16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_32sdp"
+                android:layout_marginStart="@dimen/margin_leftside"
+                android:layout_marginTop="@dimen/_56sdp"
                 android:fontFamily="@font/sfbold"
                 android:text="@string/more"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_28sdp"
+                android:textSize="@dimen/_25sdp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,27 +43,29 @@
 
             <TextView
                 android:id="@+id/tv_doodle"
-                android:onClick="OpenDoodle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:fontFamily="@font/sfmedium"
+                android:onClick="OpenDoodle"
                 android:text="@string/doodle_store"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/image_dooble"
                 app:layout_constraintTop_toTopOf="@+id/image_dooble" />
 
             <TextView
-                android:onClick="OpenDoodle"
                 android:id="@+id/tv_desc_doodle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:fontFamily="@font/sfmedium"
+                android:onClick="OpenDoodle"
                 android:text="Join our community and start selling"
                 android:textSize="@dimen/_10sdp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/image_dooble"
                 app:layout_constraintTop_toBottomOf="@+id/tv_doodle" />
 
@@ -72,11 +74,61 @@
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/_8sdp"
-                android:background="@color/grey"
+                android:background="@color/line_grey"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/tv_desc_doodle"
                 app:layout_constraintTop_toBottomOf="@+id/tv_desc_doodle" />
 
+
+            <!--        Blocked List-->
+
+            <ImageView
+                android:id="@+id/imgBlockList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_16sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:src="@drawable/ic_block_more"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view6" />
+
+
+            <TextView
+                android:id="@+id/tvimgBlockList"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:fontFamily="@font/sfmedium"
+                android:text="Block List"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_14sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imgBlockList"
+                app:layout_constraintTop_toTopOf="@+id/imgBlockList" />
+
+            <TextView
+                android:id="@+id/subtvimgBlockList"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginEnd="@dimen/_40sdp"
+                android:fontFamily="@font/sfmedium"
+                android:text="Manage blocked users"
+                android:textSize="@dimen/_10sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imgBlockList"
+                app:layout_constraintTop_toBottomOf="@+id/tvimgBlockList" />
+
+            <View
+                android:id="@+id/view70"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:background="@color/line_grey"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/subtvimgBlockList"
+                app:layout_constraintTop_toBottomOf="@+id/subtvimgBlockList" />
 
             <!--        Artist Panel-->
 
@@ -88,18 +140,19 @@
                 android:layout_marginTop="@dimen/_16sdp"
                 android:src="@drawable/artist_panel"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view6" />
+                app:layout_constraintTop_toBottomOf="@+id/view70" />
 
 
             <TextView
                 android:id="@+id/tvArtist"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:fontFamily="@font/sfmedium"
                 android:text="@string/artist_panel"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imgArtist"
                 app:layout_constraintTop_toTopOf="@+id/imgArtist" />
 
@@ -122,7 +175,7 @@
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/_8sdp"
-                android:background="@color/grey"
+                android:background="@color/line_grey"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/subtvArtist"
                 app:layout_constraintTop_toBottomOf="@+id/subtvArtist" />
@@ -131,7 +184,7 @@
             <!--        // More Information-->
 
             <ImageView
-                android:id="@+id/imageView11"
+                android:id="@+id/img_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_16sdp"
@@ -142,38 +195,40 @@
 
 
             <TextView
-                android:id="@+id/textView24"
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_more"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:fontFamily="@font/sfmedium"
                 android:text="@string/more_information"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
-                app:layout_constraintStart_toEndOf="@+id/imageView11"
-                app:layout_constraintTop_toTopOf="@+id/imageView11" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/img_more"
+                app:layout_constraintTop_toTopOf="@+id/img_more" />
 
             <TextView
-                android:id="@+id/textView21"
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_more_desc"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:fontFamily="@font/sfmedium"
                 android:text="Everything you need to know"
                 android:textSize="@dimen/_10sdp"
-                app:layout_constraintStart_toEndOf="@+id/imageView11"
-                app:layout_constraintTop_toBottomOf="@+id/textView24" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/img_more"
+                app:layout_constraintTop_toBottomOf="@+id/tv_more" />
 
             <View
                 android:id="@+id/view8"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/_8sdp"
-                android:background="@color/grey"
+                android:background="@color/line_grey"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textView21"
-                app:layout_constraintTop_toBottomOf="@+id/textView21" />
+                app:layout_constraintStart_toStartOf="@+id/tv_more_desc"
+                app:layout_constraintTop_toBottomOf="@+id/tv_more_desc" />
 
 
             <!--        Share-->
@@ -184,32 +239,34 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_16sdp"
-                android:src="@drawable/share"
+                android:src="@drawable/share1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view8" />
 
 
             <TextView
                 android:id="@+id/textView26"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:fontFamily="@font/sfmedium"
                 android:text="@string/share"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView12"
                 app:layout_constraintTop_toTopOf="@+id/imageView12" />
 
             <TextView
                 android:id="@+id/textView18"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:fontFamily="@font/sfmedium"
                 android:text="With friends and family members"
                 android:textSize="@dimen/_10sdp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView12"
                 app:layout_constraintTop_toBottomOf="@+id/textView26" />
 
@@ -218,7 +275,7 @@
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/_8sdp"
-                android:background="@color/grey"
+                android:background="@color/line_grey"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView18"
                 app:layout_constraintTop_toBottomOf="@+id/textView18" />
@@ -227,7 +284,7 @@
             <!--        Artist Panel-->
 
             <ImageView
-                android:id="@+id/imageView15"
+                android:id="@+id/logoutImg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_16sdp"
@@ -238,44 +295,46 @@
 
 
             <TextView
-                android:id="@+id/textView28"
-                android:layout_width="wrap_content"
+                android:id="@+id/LogoutTitle"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:fontFamily="@font/sfmedium"
                 android:text="@string/log_out"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
-                app:layout_constraintStart_toEndOf="@+id/imageView15"
-                app:layout_constraintTop_toTopOf="@+id/imageView15" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/logoutImg"
+                app:layout_constraintTop_toTopOf="@+id/logoutImg" />
 
             <TextView
-                android:id="@+id/textView22"
-                android:layout_width="wrap_content"
+                android:id="@+id/logoutSub"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:fontFamily="@font/sfmedium"
                 android:text="Are you sure?"
                 android:textSize="@dimen/_10sdp"
-                app:layout_constraintStart_toEndOf="@+id/imageView15"
-                app:layout_constraintTop_toBottomOf="@+id/textView28" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/logoutImg"
+                app:layout_constraintTop_toBottomOf="@+id/LogoutTitle" />
 
             <View
                 android:id="@+id/view2"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/_8sdp"
-                android:background="@color/grey"
+                android:background="@color/line_grey"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textView22"
-                app:layout_constraintTop_toBottomOf="@+id/textView22" />
+                app:layout_constraintStart_toStartOf="@+id/logoutSub"
+                app:layout_constraintTop_toBottomOf="@+id/logoutSub" />
 
 
             <!--        // More Information-->
 
             <ImageView
-                android:id="@+id/imageView17"
+                android:id="@+id/imgtvContactUs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_16sdp"
@@ -286,45 +345,47 @@
 
 
             <TextView
-                android:id="@+id/textView27"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvContactUs"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:fontFamily="@font/sfmedium"
                 android:text="@string/contact_us"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
-                app:layout_constraintStart_toEndOf="@+id/imageView17"
-                app:layout_constraintTop_toTopOf="@+id/imageView17" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imgtvContactUs"
+                app:layout_constraintTop_toTopOf="@+id/imgtvContactUs" />
 
             <TextView
-                android:id="@+id/textView25"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvContactUsDesc"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:fontFamily="@font/sfmedium"
                 android:text="We'd love to hear from you."
                 android:textSize="@dimen/_10sdp"
-                app:layout_constraintStart_toEndOf="@+id/imageView17"
-                app:layout_constraintTop_toBottomOf="@+id/textView27" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imgtvContactUs"
+                app:layout_constraintTop_toBottomOf="@+id/tvContactUs" />
 
             <View
                 android:id="@+id/view9"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/_8sdp"
-                android:background="@color/grey"
+                android:background="@color/line_grey"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textView25"
-                app:layout_constraintTop_toBottomOf="@+id/textView25" />
+                app:layout_constraintStart_toStartOf="@+id/tvContactUsDesc"
+                app:layout_constraintTop_toBottomOf="@+id/tvContactUsDesc" />
 
 
             <TextView
                 android:id="@+id/textView29"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_64sdp"
+                android:layout_marginTop="@dimen/_40sdp"
                 android:fontFamily="@font/sfmedium"
                 android:text="@string/support"
                 android:textColor="@color/black"
@@ -334,6 +395,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/view2" />
 
             <TextView
+                android:layout_marginBottom="@dimen/_35sdp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_3sdp"
@@ -341,6 +403,7 @@
                 android:text="+1 (917)725-4095"
                 android:textColor="@color/appBlue"
                 android:textSize="@dimen/_14sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView29" />

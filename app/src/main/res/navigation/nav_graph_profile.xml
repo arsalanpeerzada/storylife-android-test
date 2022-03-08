@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/profile"
-        android:name="com.storylife.UI.Fragments.Profile"
+        android:name="com.inksy.UI.Fragments.Profile"
         android:label="Profile"
         tools:layout="@layout/fragment_profile">
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/editProfile"
-        android:name="com.storylife.UI.Fragments.EditProfile"
+        android:name="com.inksy.UI.Fragments.EditProfile"
         android:label="EditProfile"
         tools:layout="@layout/fragment_edit_profile">
         <action

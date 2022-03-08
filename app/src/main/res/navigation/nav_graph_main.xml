@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/journal"
-        android:name="com.storylife.UI.Fragments.Journal"
+        android:name="com.inksy.UI.Fragments.Journal"
         android:label="Journal"
         tools:layout="@layout/fragment_journal" />
 </navigation>
