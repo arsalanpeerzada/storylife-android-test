@@ -65,15 +65,13 @@
         app:layout_constraintTop_toBottomOf="@+id/name" />
 
 
-
-
     <View
         android:id="@+id/view3"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="@color/line_grey"
         app:layout_constraintEnd_toEndOf="@+id/text"
-        app:layout_constraintStart_toStartOf="@+id/text"
+        app:layout_constraintStart_toStartOf="@+id/bio"
         app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

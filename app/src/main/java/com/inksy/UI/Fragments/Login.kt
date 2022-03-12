@@ -35,8 +35,8 @@ class Login : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentLoginBinding.inflate(layoutInflater)
-        val mobile = arguments?.getString("number")
-        val mobileNumber = mobile?.replace("\\s".toRegex(), "")
+        val mobileNumber = arguments?.getString("number")
+
         val code = arguments?.getString("code")//args.mobileNumber
         binding.button.setOnClickListener() {
 
@@ -78,7 +78,7 @@ class Login : Fragment() {
                             tinydb.putString("following", it.data?.followingCount.toString())
                             tinydb.putString("points", it.data?.points.toString())
                             tinydb.putString("phonecode", it.data?.phoneCode.toString())
-                            tinydb.putInt("isprivate", it.data?.isPrivateProfile!!)
+                            tinydb.putString("isprivate", it.data?.isPrivateProfile!!.toString())
                             tinydb.putInt("isprofilecompleted", it.data?.isProfileCompleted!!)
 
                             if (it.data?.isProfileCompleted == 0) {

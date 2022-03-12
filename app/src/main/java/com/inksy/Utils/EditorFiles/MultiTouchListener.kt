@@ -1,12 +1,15 @@
 package ja.burhanrashid52.photoeditor
 
 import android.graphics.Rect
+import android.util.Log
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.widget.ImageView
+import com.inksy.Interfaces.onMoveListener
+import com.inksy.Model.TransformInfo
 import kotlin.math.max
 import kotlin.math.min
 
@@ -23,7 +26,8 @@ internal class MultiTouchListener(
     photoEditImageView: ImageView?,
     private val mIsPinchScalable: Boolean,
     onPhotoEditorListener: OnPhotoEditorListener?,
-    viewState: PhotoEditorViewState
+    viewState: PhotoEditorViewState,
+    var onMoveListener: onMoveListener
 ) : OnTouchListener {
     private val mGestureListener: GestureDetector
     private val isRotateEnabled = true
@@ -46,6 +50,7 @@ internal class MultiTouchListener(
     private var mOnGestureControl: OnGestureControl? = null
     private val mOnPhotoEditorListener: OnPhotoEditorListener?
     private val viewState: PhotoEditorViewState
+
     override fun onTouch(view: View, event: MotionEvent): Boolean {
         mScaleGestureDetector.onTouchEvent(view, event)
         mGestureListener.onTouchEvent(event)
@@ -156,20 +161,21 @@ internal class MultiTouchListener(
             info.minimumScale = minimumScale
             info.maximumScale = maximumScale
             move(view, info)
+            onMoveListener.onMove(view,info)
             return !mIsPinchScalable
         }
     }
 
-    private inner class TransformInfo {
-        var deltaX = 0f
-        var deltaY = 0f
-        var deltaScale = 0f
-        var deltaAngle = 0f
-        var pivotX = 0f
-        var pivotY = 0f
-        var minimumScale = 0f
-        var maximumScale = 0f
-    }
+//    class TransformInfo {
+//        var deltaX = 0f
+//        var deltaY = 0f
+//        var deltaScale = 0f
+//        var deltaAngle = 0f
+//        var pivotX = 0f
+//        var pivotY = 0f
+//        var minimumScale = 0f
+//        var maximumScale = 0f
+//    }
 
     internal interface OnMultiTouchListener {
         fun onEditTextClickListener(text: String?, colorCode: Int)
@@ -199,6 +205,7 @@ internal class MultiTouchListener(
     }
 
     companion object {
+
         private const val INVALID_POINTER_ID = -1
         private fun adjustAngle(degrees: Float): Float {
             return when {
@@ -221,6 +228,9 @@ internal class MultiTouchListener(
             view.scaleY = scale
             val rotation = adjustAngle(view.rotation + info.deltaAngle)
             view.rotation = rotation
+
+            var _info = info.toString()
+            Log.d("info", _info)
         }
 
         private fun adjustTranslation(view: View, deltaX: Float, deltaY: Float) {

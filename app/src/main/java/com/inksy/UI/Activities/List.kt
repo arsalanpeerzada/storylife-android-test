@@ -45,7 +45,8 @@ class List : AppCompatActivity(), iOnClickListerner {
                     adapter = BlockedUsersAdapter(this, list, this)
                     binding.rvItemList.adapter = adapter
 
-                    binding.layoutblockeduser.visibility = View.VISIBLE
+                    binding.layoutblockeduser.visibility = View.GONE
+                    binding.rvItemList.visibility = View.VISIBLE
                 }
             }
         }

@@ -14,15 +14,20 @@ internal class GraphicManager(
     private val mViewState: PhotoEditorViewState
 ) {
     var onPhotoEditorListener: OnPhotoEditorListener? = null
-    fun addView(graphic: Graphic ,axixX : Float, axixY: Float) {
+    fun addView(graphic: Graphic ,axixX : Float, axixY: Float,width : Float,height:Float) {
         val view = graphic.rootView
         val params = RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
         )
       //  params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE)
-
+view.tag = graphic.viewType
         view.x = axixX
         view.y = axixY
+        if (width != 0f && height != 0f){
+            params.height = height.toInt()
+            params.width = width.toInt()
+        }
+
         mPhotoEditorView.addView(view, params)
         mViewState.addAddedView(view)
 

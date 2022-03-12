@@ -10,6 +10,7 @@ import android.widget.ImageView
 import androidx.annotation.IntRange
 import androidx.annotation.RequiresPermission
 import androidx.annotation.UiThread
+import com.inksy.Interfaces.onMoveListener
 import ja.burhanrashid52.photoeditor.shape.ShapeBuilder
 
 /**
@@ -24,7 +25,14 @@ interface PhotoEditor {
      *
      * @param desiredImage bitmap image you want to add
      */
-    fun addImage(desiredImage: Bitmap?)
+    fun addImage(
+        desiredImage: Bitmap?,
+        axixX: Float,
+        axixY: Float,
+        width: Float,
+        height: Float,
+        onMove: onMoveListener
+    )
 
     /**
      * This add the text on the [PhotoEditorView] with provided parameters
@@ -34,7 +42,15 @@ interface PhotoEditor {
      * @param colorCodeTextView text color to be displayed
      */
     @SuppressLint("ClickableViewAccessibility")
-    fun addText(text: String?, colorCodeTextView: Int, axixX: Float, axixY: Float)
+    fun addText(
+        text: String?,
+        colorCodeTextView: Int,
+        axixX: Float,
+        axixY: Float,
+        width: Float,
+        height: Float,
+        onMove: onMoveListener
+    )
 
     /**
      * This add the text on the [PhotoEditorView] with provided parameters
@@ -50,7 +66,9 @@ interface PhotoEditor {
         text: String?,
         colorCodeTextView: Int,
         axixX: Float,
-        axixY: Float
+        axixY: Float,
+        width: Float, height: Float,
+        onMove: onMoveListener
     )
 
     /**
@@ -61,7 +79,15 @@ interface PhotoEditor {
      * @param styleBuilder text style builder with your style
      */
     @SuppressLint("ClickableViewAccessibility")
-    fun addText(text: String?, styleBuilder: TextStyleBuilder?, axixX: Float, axixY: Float)
+    fun addText(
+        text: String?,
+        styleBuilder: TextStyleBuilder?,
+        axixX: Float,
+        axixY: Float,
+        width: Float,
+        height: Float,
+        onMove: onMoveListener
+    )
 
     /**
      * This will update text and color on provided view

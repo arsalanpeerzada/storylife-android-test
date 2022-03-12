@@ -1,7 +1,6 @@
 package com.inksy.UI.Fragments
 
 import android.R
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,9 +12,9 @@ import androidx.lifecycle.ViewModelProviders
 import com.inksy.Interfaces.OnDialogClickListener
 import com.inksy.UI.Activities.*
 import com.inksy.UI.Activities.List
-import com.inksy.UI.Constants
 import com.inksy.UI.Dialogs.TwoButtonDialog
 import com.inksy.UI.ViewModel.LogoutView
+import com.inksy.Utils.TinyDB
 import com.inksy.databinding.FragmentMoreInfoBinding
 
 class MoreInfo : Fragment() {
@@ -92,12 +91,10 @@ class MoreInfo : Fragment() {
 
 
     fun logout() {
-        val shared = context?.getSharedPreferences(
-            Constants.APP_NAME,
-            Context.MODE_PRIVATE
-        )
 
-        var token = shared?.getString("token", " ")
+        var tinyDB = TinyDB(requireContext())
+
+        var token = tinyDB.getString("token")
 
         logoutView = ViewModelProviders.of(requireActivity())[LogoutView::class.java]
         logoutView.init()
@@ -105,9 +102,7 @@ class MoreInfo : Fragment() {
 
             if (it?.status == 1) {
 
-                val edit = shared?.edit()
-                edit?.clear()
-                edit?.apply()
+                tinyDB.clear()
 
                 requireContext().startActivity(
                     Intent(

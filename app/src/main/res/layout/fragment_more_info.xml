@@ -7,13 +7,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".UI.Fragments.MoreInfo">
-
-
             <TextView
                 android:id="@+id/textView16"
                 android:layout_width="wrap_content"
@@ -78,10 +75,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/tv_desc_doodle"
                 app:layout_constraintTop_toBottomOf="@+id/tv_desc_doodle" />
-
-
             <!--        Blocked List-->
-
             <ImageView
                 android:id="@+id/imgBlockList"
                 android:layout_width="wrap_content"
@@ -382,7 +376,7 @@
 
 
             <TextView
-                android:id="@+id/textView29"
+                android:id="@+id/support"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_40sdp"
@@ -406,7 +400,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView29" />
+                app:layout_constraintTop_toBottomOf="@+id/support" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

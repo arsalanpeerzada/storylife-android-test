@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.IntRange
 import androidx.annotation.RequiresPermission
+import com.inksy.Interfaces.onMoveListener
 import com.inksy.R
 import ja.burhanrashid52.photoeditor.PhotoEditor.OnSaveListener
 import ja.burhanrashid52.photoeditor.PhotoEditorImageViewListener.OnSingleTapUpCallback
@@ -46,16 +47,36 @@ internal class PhotoEditorImpl @SuppressLint("ClickableViewAccessibility") const
     private val mDefaultEmojiTypeface: Typeface? = builder.emojiTypeface
     private val mGraphicManager: GraphicManager = GraphicManager(builder.photoEditorView, viewState)
     private val context: Context = builder.context
+    private lateinit var onMoveListener: onMoveListener
 
-    override fun addImage(desiredImage: Bitmap?) {
+    override fun addImage(
+        desiredImage: Bitmap?,
+        axixX: Float,
+        axixY: Float,
+        width: Float,
+        height: Float,
+        _onMoveListener: onMoveListener
+    ) {
+        this.onMoveListener = _onMoveListener
         val multiTouchListener = getMultiTouchListener(true)
         val sticker = Sticker(photoEditorView, multiTouchListener, viewState, mGraphicManager)
         sticker.buildView(desiredImage)
-        addToEditor(sticker,0f,0f)
+        addToEditor(sticker, axixX, axixY, width, height)
+
     }
 
-    override fun addText(text: String?, colorCodeTextView: Int, axixX: Float, axixY: Float) {
-        addText(null, text, colorCodeTextView,axixX,axixY)
+    override fun addText(
+        text: String?,
+        colorCodeTextView: Int,
+        axixX: Float,
+        axixY: Float,
+        width: Float,
+        height: Float,
+        _onMoveListener: onMoveListener
+    ) {
+        this.onMoveListener = _onMoveListener
+        addText(null, text, colorCodeTextView, axixX, axixY, width, height,_onMoveListener)
+
     }
 
     override fun addText(
@@ -63,17 +84,29 @@ internal class PhotoEditorImpl @SuppressLint("ClickableViewAccessibility") const
         text: String?,
         colorCodeTextView: Int,
         axixX: Float,
-        axixY: Float
+        axixY: Float,
+        width: Float, height: Float,
+        _onMoveListener: onMoveListener
     ) {
+        this.onMoveListener = _onMoveListener
         val styleBuilder = TextStyleBuilder()
         styleBuilder.withTextColor(colorCodeTextView)
         if (textTypeface != null) {
             styleBuilder.withTextFont(textTypeface)
         }
-        addText(text, styleBuilder,axixX,axixY)
+        addText(text, styleBuilder, axixX, axixY, width, height,_onMoveListener)
+
     }
 
-    override fun addText(text: String?, styleBuilder: TextStyleBuilder?, axixX: Float, axixY: Float) {
+    override fun addText(
+        text: String?,
+        styleBuilder: TextStyleBuilder?,
+        axixX: Float,
+        axixY: Float,
+        width: Float,
+        height: Float, _onMoveListener: onMoveListener
+    ) {
+        this.onMoveListener = _onMoveListener
         drawingView?.enableDrawing(false)
         val multiTouchListener = getMultiTouchListener(isTextPinchScalable)
         val textGraphic =
@@ -85,7 +118,8 @@ internal class PhotoEditorImpl @SuppressLint("ClickableViewAccessibility") const
                 mGraphicManager
             )
         textGraphic.buildView(text, styleBuilder)
-        addToEditor(textGraphic,axixX,axixY)
+        addToEditor(textGraphic,axixX,axixY,width, height)
+
     }
 
     override fun editText(view: View, inputText: String?, colorCode: Int) {
@@ -129,12 +163,12 @@ internal class PhotoEditorImpl @SuppressLint("ClickableViewAccessibility") const
                 mDefaultEmojiTypeface
             )
         emoji.buildView(emojiTypeface, emojiName)
-        addToEditor(emoji,0f,0f)
+        addToEditor(emoji,0f,0f,0f,0f)
     }
 
-    private fun addToEditor(graphic: Graphic,axixX : Float, axixY: Float) {
+    private fun addToEditor(graphic: Graphic,axixX : Float, axixY: Float,width : Float,height:Float) {
         clearHelperBox()
-        mGraphicManager.addView(graphic,axixX,axixY)
+        mGraphicManager.addView(graphic,axixX,axixY,width,height)
         // Change the in-focus view
         viewState.currentSelectedView = graphic.rootView
     }
@@ -146,14 +180,18 @@ internal class PhotoEditorImpl @SuppressLint("ClickableViewAccessibility") const
      * @return scalable multitouch listener
      */
     private fun getMultiTouchListener(isPinchScalable: Boolean): MultiTouchListener {
+
+
         return MultiTouchListener(
             deleteView,
             photoEditorView,
             imageView,
             isPinchScalable,
             mOnPhotoEditorListener,
-            viewState
+            viewState,
+            this.onMoveListener
         )
+
     }
 
     override fun setBrushDrawingMode(brushDrawingMode: Boolean) {
@@ -282,6 +320,7 @@ internal class PhotoEditorImpl @SuppressLint("ClickableViewAccessibility") const
 
     companion object {
         private const val TAG = "PhotoEditor"
+
     }
 
     init {

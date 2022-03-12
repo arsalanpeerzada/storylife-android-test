@@ -46,11 +46,11 @@ class EditProfile : Fragment() {
         binding.summary.setText(tinyDB.getString("bio"))
         token = tinyDB.getString("token").toString()
 
-        var isprivate = tinyDB.getInt("isprivate")
+        var isprivate = tinyDB.getString("isprivate")
 
-//        if (isprivate == 1){
-//            binding.privacyChange.isChecked = Check
-//        }
+        if (isprivate == "1") {
+            binding.privacyChange.isChecked = true
+        }
 
         binding.email.text = tinyDB.getString("email")
         binding.phone.text = tinyDB.getString("phonecode") + tinyDB.getString("phone")
@@ -91,6 +91,8 @@ class EditProfile : Fragment() {
 
 //                val action = EditProfileDirections.actionEditProfileToProfile()
 //                findNavController().navigate(action)
+
+
                 var requestBody = RequestBody.create(
                     ".png".toMediaTypeOrNull(),
                     FileUtil.from(requireContext(), Uri.EMPTY)
@@ -177,7 +179,7 @@ class EditProfile : Fragment() {
         )?.observe(requireActivity()) {
             if (it?.status == 1) {
 
-                tinyDB.putString("isprivate", it.data?.isPrivateProfile.toString())
+                tinyDB.putString("isprivate", it.data?.isPrivateProfile!!.toString())
                 Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
 
             } else {

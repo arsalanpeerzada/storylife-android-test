@@ -3,6 +3,7 @@ package com.inksy.UI.Fragments
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.net.Uri
@@ -10,12 +11,13 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Html
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -25,7 +27,6 @@ import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.setPadding
 import androidx.core.view.size
-import androidx.databinding.adapters.AdapterViewBindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,11 +35,12 @@ import com.burhanrashid52.photoediting.*
 import com.burhanrashid52.photoediting.TextEditorDialogFragment.Companion.show
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.Gson
-import com.google.gson.JsonArray
 import com.inksy.Interfaces.OnDialogBulletClickListener
 import com.inksy.Interfaces.PopUpOnClickListerner
 import com.inksy.Interfaces.iOnClickListerner
+import com.inksy.Interfaces.onMoveListener
 import com.inksy.Model.Styles
+import com.inksy.Model.TransformInfo
 import com.inksy.R
 import com.inksy.UI.Activities.MainActivity
 import com.inksy.UI.Adapter.BulletAdapter
@@ -59,21 +61,18 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
+import kotlin.math.max
+import kotlin.math.min
+
 
 class create_journal_entry : Fragment(), iOnClickListerner, OnPhotoEditorListener,
     PropertiesBSFragment.Properties, ShapeBSFragment.Properties, EmojiBSFragment.EmojiListener,
-    StickerBSFragment.StickerListener,
-    AdapterViewBindingAdapter.OnItemSelected, OnDialogBulletClickListener, PopUpOnClickListerner,
-    View.OnFocusChangeListener, View.OnClickListener {
+    StickerBSFragment.StickerListener, OnDialogBulletClickListener, PopUpOnClickListerner,
+    View.OnFocusChangeListener, View.OnClickListener, onMoveListener {
 
-    companion object {
-        private const val TYPE_BULLETS = 0
-        private const val TYPE_CHECKBOX = 1
-        private const val TYPE_NUMBERLIST = 2
-        private const val TYPE_ALPHALIST = 3
-    }
 
-    lateinit var imageArray: JsonArray
+    lateinit var info: com.inksy.Model.TransformInfo
+    lateinit var imageArray: JSONArray
     lateinit var textArray: JSONArray
     lateinit var bulletArray: JSONArray
     lateinit var llTestDraggable: DraggableView<LinearLayout>
@@ -128,9 +127,11 @@ class create_journal_entry : Fragment(), iOnClickListerner, OnPhotoEditorListene
 
             bulletArray = jsonObject.getJSONArray("ArrayofBullets")
             textArray = jsonObject.getJSONArray("ArrayofText")
+            imageArray = jsonObject.getJSONArray("ArrayofImage")
             var gson = Gson()
             var index = bulletArray.length()
             var textarray = textArray.length()
+            var imagearray = imageArray.length()
 
             for (i in 0 until index) {
                 var jsonObject = bulletArray.getJSONObject(i)
@@ -162,7 +163,39 @@ class create_journal_entry : Fragment(), iOnClickListerner, OnPhotoEditorListene
             }
             for (k in 0 until textarray) {
 
-                setTextArray(k)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    setTextArray(k)
+                }
+            }
+            for (l in 0 until imagearray) {
+
+                val imageJsonObject = imageArray.getJSONObject(l)
+                var width: String = imageJsonObject.getString("width")
+                var height: String = imageJsonObject.getString("height")
+                var bit = imageJsonObject.getString("bitmap")
+                var axixX = imageJsonObject.getString("axixX")
+                var axixY = imageJsonObject.getString("axixY")
+                var info = imageJsonObject.getString("info")
+
+                var _info: TransformInfo = gson.fromJson(info, TransformInfo::class.java)
+
+
+                val charset = Charsets.UTF_8
+
+                val imageBytes = Base64.decode(bit, Base64.DEFAULT)
+                val decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+
+                mPhotoEditor.addImage(
+                    decodedImage,
+                    axixX.toFloat(),
+                    axixY.toFloat(),
+                    width.toFloat(),
+                    height.toFloat(), this
+                )
+
+                var view = binding.photoEditorView.getChildAt(3) as FrameLayout
+                moveFinal(view, _info)
+
             }
         }
 
@@ -180,8 +213,10 @@ class create_journal_entry : Fragment(), iOnClickListerner, OnPhotoEditorListene
         val _typface: Int = jsonObject.get("typeface") as Int
         val isBold: Boolean = jsonObject.get("bold") as Boolean
         val isItalic: Boolean = jsonObject.get("italic") as Boolean
-        val axixX: Double = jsonObject.get("axixX") as Double
-        val axixY: Double = jsonObject.get("axixY") as Double
+        val axixX: String = jsonObject.getString("axixX")
+        val axixY: String = jsonObject.getString("axixY")
+        var width: String = jsonObject.getString("width")
+        var height: String = jsonObject.getString("height")
 
 
         val styleBuilder = TextStyleBuilder()
@@ -206,7 +241,15 @@ class create_journal_entry : Fragment(), iOnClickListerner, OnPhotoEditorListene
         }
 
         textArray.put(jsonObject)
-        mPhotoEditor.addText(inputText, styleBuilder, axixX.toFloat(), axixY.toFloat())
+        mPhotoEditor.addText(
+            inputText,
+            styleBuilder,
+            axixX.toFloat(),
+            axixY.toFloat(),
+            width.toFloat(),
+            height.toFloat(),
+            this,
+        )
     }
 
     private fun showBottomSheetDialogFragment(fragment: BottomSheetDialogFragment?) {
@@ -323,7 +366,19 @@ class create_journal_entry : Fragment(), iOnClickListerner, OnPhotoEditorListene
                     }
 
 
-                    mPhotoEditor.addText(inputText, styleBuilder, 0f, 0f)
+                    mPhotoEditor.addText(
+                        inputText,
+                        styleBuilder,
+                        0f,
+                        0f,
+                        0f,
+                        0f,
+                        object : onMoveListener {
+                            override fun onMove(view: View, info: com.inksy.Model.TransformInfo) {
+                                super.onMove(view, info)
+                            }
+
+                        })
                 }
             })
         }
@@ -355,8 +410,6 @@ class create_journal_entry : Fragment(), iOnClickListerner, OnPhotoEditorListene
                 var tinyDB = TinyDB(requireContext())
                 tinyDB.putString("jsondata", jsonString)
 
-                val centreX = (_data?.x!! / 2).toInt()
-                val centreY = (_data?.y!! / 2).toInt()
 
             }
             openPopUp("Edit", binding.plus, "Edit")
@@ -430,7 +483,8 @@ class create_journal_entry : Fragment(), iOnClickListerner, OnPhotoEditorListene
                     requireActivity().applicationContext.contentResolver,
                     uri
                 )
-                mPhotoEditor.addImage(bitmap)
+                mPhotoEditor.addImage(bitmap, 0f, 0f, 0f, 0f, this)
+
 
             } else if (requestCode == PICK_IMAGE_BACKGROUND) {
                 cameraUri = data!!.data!!
@@ -548,9 +602,7 @@ class create_journal_entry : Fragment(), iOnClickListerner, OnPhotoEditorListene
 
     }
 
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
-    }
 
     override fun onDialogClick(
         callBacktv: Styles,
@@ -659,10 +711,7 @@ class create_journal_entry : Fragment(), iOnClickListerner, OnPhotoEditorListene
             var axixX = linearLayout.x
             var axixY = linearLayout.y
 
-            Toast.makeText(requireContext(), "Old Value : $_axixX : $_axixY ", Toast.LENGTH_LONG)
-                .show()
-            Toast.makeText(requireContext(), "New Value : $axixX : $axixY ", Toast.LENGTH_LONG)
-                .show()
+            Toast.makeText(requireContext(), "Layout Value $axixX : $axixY", Toast.LENGTH_SHORT).show()
 
             var bulletArray = JSONArray()
             var bulletsJson = JSONObject()
@@ -807,6 +856,78 @@ class create_journal_entry : Fragment(), iOnClickListerner, OnPhotoEditorListene
 
             }
         }
+    }
+
+    companion object {
+
+
+        private const val TYPE_BULLETS = 0
+        private const val TYPE_CHECKBOX = 1
+        private const val TYPE_NUMBERLIST = 2
+        private const val TYPE_ALPHALIST = 3
+        private const val INVALID_POINTER_ID = -1
+        private fun adjustAngle(degrees: Float): Float {
+            return when {
+                degrees > 180.0f -> {
+                    degrees - 360.0f
+                }
+                degrees < -180.0f -> {
+                    degrees + 360.0f
+                }
+                else -> degrees
+            }
+        }
+
+        private fun moveFinal(view: View, info: TransformInfo) {
+            computeRenderOffset(view, info.pivotX, info.pivotY)
+            adjustTranslation(view, info.deltaX, info.deltaY)
+            var scale = view.scaleX * info.deltaScale
+            scale = max(info.minimumScale, min(info.maximumScale, scale))
+            view.scaleX = scale
+            view.scaleY = scale
+            val rotation = adjustAngle(view.rotation + info.deltaAngle)
+            view.rotation = rotation
+            var _info = info.toString()
+            Log.d("info", _info)
+        }
+
+        private fun adjustTranslation(view: View, deltaX: Float, deltaY: Float) {
+            val deltaVector = floatArrayOf(deltaX, deltaY)
+            view.matrix.mapVectors(deltaVector)
+            view.translationX = view.translationX + deltaVector[0]
+            view.translationY = view.translationY + deltaVector[1]
+        }
+
+        private fun computeRenderOffset(view: View, pivotX: Float, pivotY: Float) {
+            if (view.pivotX == pivotX && view.pivotY == pivotY) {
+                return
+            }
+            val prevPoint = floatArrayOf(0.0f, 0.0f)
+            view.matrix.mapPoints(prevPoint)
+            view.pivotX = pivotX
+            view.pivotY = pivotY
+            val currPoint = floatArrayOf(0.0f, 0.0f)
+            view.matrix.mapPoints(currPoint)
+            val offsetX = currPoint[0] - prevPoint[0]
+            val offsetY = currPoint[1] - prevPoint[1]
+            view.translationX = view.translationX - offsetX
+            view.translationY = view.translationY - offsetY
+        }
+    }
+
+//    private inner class TransformInfo {
+//        var deltaX = 0f
+//        var deltaY = 0f
+//        var deltaScale = 0f
+//        var deltaAngle = 0f
+//        var pivotX = 0f
+//        var pivotY = 0f
+//        var minimumScale = 0f
+//        var maximumScale = 0f
+//    }
+
+    override fun onMove(view: View, info: TransformInfo) {
+        super.onMove(view, info)
     }
 
 }

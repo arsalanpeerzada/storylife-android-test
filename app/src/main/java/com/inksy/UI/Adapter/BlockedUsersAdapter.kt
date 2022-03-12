@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.inksy.Interfaces.iOnClickListerner
@@ -52,6 +53,7 @@ class BlockedUsersAdapter(
             holder.bio.text = list[position].bio
 
             Glide.with(context).load(Constants.BASE_IMAGE + list[position].avatar)
+                .placeholder(ContextCompat.getDrawable(context, R.drawable.avatar_placeholder))
                 .into(holder.avatar)
 
 

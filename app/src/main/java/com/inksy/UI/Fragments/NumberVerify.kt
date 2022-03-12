@@ -52,7 +52,10 @@ class NumberVerify : Fragment(),OnKeyboardVisibilityListener {
                 if (binding.number.length() in 9..13) {
 
                     val bundle = Bundle()
-                    bundle.putString("number", binding.number.text.toString())
+                    var number = binding.number.text.toString()
+                    //  val re = Regex("[^A-Za-z0-9  ]")
+                    number = number.filter { it.isLetterOrDigit() }
+                    bundle.putString("number", number)
                     bundle.putString("code", binding.ccp.selectedCountryCodeWithPlus.toString())
 
                     findNavController().navigate(R.id.action_numberVerify_to_fragmentOtp, bundle)

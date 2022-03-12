@@ -72,8 +72,6 @@ class Bio : Fragment() {
                             tinyDB.putString("avatar", it?.data?.avatar)
                         }
 
-
-
                         requireContext().startActivity(
                             Intent(
                                 requireContext(),
