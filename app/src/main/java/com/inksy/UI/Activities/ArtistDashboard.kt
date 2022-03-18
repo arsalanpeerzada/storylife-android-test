@@ -20,6 +20,7 @@ import com.inksy.databinding.Tablayout2Binding
 
 
 class ArtistDashboard : AppCompatActivity() {
+
     private lateinit var adapterViewPager: MyPagerAdapter
     lateinit var binding: ActivityArtistDashboardBinding
     lateinit var vpPager: ViewPager
@@ -47,7 +48,6 @@ class ArtistDashboard : AppCompatActivity() {
         binding.ivBack.setOnClickListener {
             exitCheck()
         }
-
 
         vpPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(

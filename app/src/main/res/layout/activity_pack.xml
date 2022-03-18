@@ -125,7 +125,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_28sdp"
                     android:fontFamily="@font/sfmedium"
-                    android:text="Your Price is $2.50"
+                    android:text="Your Price is $60"
                     android:textColor="@color/applightblue"
                     android:textSize="@dimen/_12sdp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -172,9 +172,10 @@
 
 
                 <ImageView
+                    android:scaleType="fitXY"
                     android:id="@+id/imageView14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
                     android:layout_marginTop="@dimen/_24sdp"
                     android:src="@drawable/cover"
                     app:layout_constraintEnd_toEndOf="parent"

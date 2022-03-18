@@ -18,15 +18,19 @@ class DashboardAdapter(
     var context: Context,
     var list_logo: Array<Int>,
     var list_name: Array<String>,
+    var value: IntArray
 ) : RecyclerView.Adapter<DashboardAdapter.ViewHolder>() {
 
     class ViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
 
         lateinit var name: TextView
+        lateinit var value: TextView
         lateinit var logo: ImageView
         fun bind() {
             name = itemView.findViewById(R.id.name)
             logo = itemView.findViewById(R.id.logo)
+            value = itemView.findViewById(R.id.value)
+
 
         }
     }
@@ -43,6 +47,7 @@ class DashboardAdapter(
             holder.bind()
             Glide.with(context).load(list_logo[position]).into(holder.logo)
             holder.name.text = list_name[position]
+            holder.value.text = value[position].toString()
 
 
         } catch (e: NullPointerException) {
@@ -55,8 +60,9 @@ class DashboardAdapter(
         holder.itemView.setOnClickListener {
 
             if (list_name[position].contains(Constants.amountPaid))
-            context.startActivity(
-                Intent(context, AmountReceived::class.java))
+                context.startActivity(
+                    Intent(context, AmountReceived::class.java)
+                )
 
 
         }

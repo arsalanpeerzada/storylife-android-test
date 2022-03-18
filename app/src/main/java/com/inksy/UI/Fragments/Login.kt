@@ -80,6 +80,7 @@ class Login : Fragment() {
                             tinydb.putString("phonecode", it.data?.phoneCode.toString())
                             tinydb.putString("isprivate", it.data?.isPrivateProfile!!.toString())
                             tinydb.putInt("isprofilecompleted", it.data?.isProfileCompleted!!)
+                            tinydb.putInt("isArtist", it?.data?.is_artist!!)
 
                             if (it.data?.isProfileCompleted == 0) {
 
@@ -109,7 +110,8 @@ class Login : Fragment() {
                             Toast.makeText(requireContext(), it?.message, Toast.LENGTH_SHORT).show()
 
                             if (it?.message.toString() == "Your account is not activated."
-                                || it?.message.toString() == "Sorry! Phone number is not associated with this email address.") {
+                                || it?.message.toString() == "Sorry! Phone number is not associated with this email address."
+                            ) {
                                 var action: NavDirections =
                                     LoginDirections.actionLoginToNumberVerify()
                                 findNavController().navigate(action)
@@ -122,6 +124,10 @@ class Login : Fragment() {
                     binding.emailError.text = getString(R.string.emailError2)
                 }
             }
+        }
+
+        binding.forgetPassword.setOnClickListener {
+
         }
         return binding.root
     }

@@ -284,6 +284,56 @@ class PeopleRepo {
         return data
     }
 
+    fun followRequests(
+        token: String?
+    ): MutableLiveData<Resource<APIInterface.ApiResponse<List<PeopleListModel>>>> {
+        val data: MutableLiveData<Resource<APIInterface.ApiResponse<List<PeopleListModel>>>> =
+            MutableLiveData<Resource<APIInterface.ApiResponse<List<PeopleListModel>>>>()
+
+        var mytoken = "Bearer $token"
+
+        apiInterface.followRequests(mytoken)
+            ?.enqueue(object : Callback<APIInterface.ApiResponse<List<PeopleListModel>>> {
+                override fun onResponse(
+                    call: Call<APIInterface.ApiResponse<List<PeopleListModel>>>,
+                    response: Response<APIInterface.ApiResponse<List<PeopleListModel>>>
+                ) {
+                    if (response.body() != null) {
+                        val body: APIInterface.ApiResponse<List<PeopleListModel>> = response.body()!!
+
+                        if (body.status == 1) {
+                            data.value = Resource.success(body)
+                        } else {
+                            data.value = Resource.error(body.message.toString(), null)
+                        }
+
+
+                    } else {
+                        val body: ResponseBody? = response.errorBody()
+                        try {
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            var string = jObjError.getString("message")
+
+                            data.value = Resource.error(string, null)
+                        } catch (e: Exception) {
+                            // Toast.makeText(getContext(), e.message, Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<APIInterface.ApiResponse<List<PeopleListModel>>>,
+                    t: Throwable?
+                ) {
+                    var dataa = t?.message.toString()
+                    var mydata = t?.localizedMessage
+
+                    data.value = Resource.error(dataa, null)
+                }
+            })
+        return data
+    }
+
 
     fun getBlockList(
         token: String?

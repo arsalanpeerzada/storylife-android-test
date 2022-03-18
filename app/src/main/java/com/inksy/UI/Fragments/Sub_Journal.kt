@@ -17,6 +17,7 @@ import com.inksy.Model.Categories
 import com.inksy.Model.Journals
 import com.inksy.Remote.Status
 import com.inksy.UI.Activities.CreateActivity
+import com.inksy.UI.Activities.StartingActivity
 import com.inksy.UI.Activities.ViewAll
 import com.inksy.UI.Adapter.BookAdapter
 import com.inksy.UI.Constants
@@ -152,6 +153,17 @@ class Sub_Journal :
                 }
 
                 Status.ERROR -> {
+                    refreshLayout.isRefreshing = false;
+
+                    tinyDB.clear()
+
+                    requireContext().startActivity(
+                        Intent(
+                            requireContext(),
+                            StartingActivity::class.java
+                        )
+                    )
+                    Toast.makeText(requireContext(), "Token Expired", Toast.LENGTH_SHORT).show()
                     refreshLayout.isRefreshing = false;
                 }
                 Status.LOADING -> {}

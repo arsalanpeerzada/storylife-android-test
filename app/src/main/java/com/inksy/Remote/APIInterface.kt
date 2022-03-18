@@ -6,14 +6,12 @@ import com.google.gson.JsonElement
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import com.inksy.Model.*
-import com.inksy.UI.Fragments.Journal
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
 
 public interface APIInterface {
-
 
 
     @FormUrlEncoded
@@ -58,6 +56,13 @@ public interface APIInterface {
         @Header("Authorization") token: String?
     ): Call<ApiResponse<UserModel>>
 
+    @GET("user/follow/requests")
+    @Headers("Accept: application/json")
+    fun followRequests(
+        @Header("Authorization") token: String?
+    ): Call<ApiResponse<List<PeopleListModel>>>
+
+
     @GET("doodle/shop")
     @Headers("Accept: application/json")
     fun doodleShop(
@@ -76,6 +81,22 @@ public interface APIInterface {
         @Header("Authorization") token: String?
     ): Call<ApiResponse<List<DoodlePack>>>
 
+    @GET("artist/dashboard")
+    @Headers("Accept: application/json")
+    fun artistDashboard(
+        @Header("Authorization") token: String?
+    ): Call<ApiResponse<JsonElement>>
+
+    @Multipart
+    @POST("doodle/pack/create")
+    @Headers("Accept: application/json")
+    fun createPack(
+        @Header("Authorization") token: String?,
+        @Part("pack_title") pack_title: RequestBody,
+        @Part("price") price: RequestBody,
+        @Part("default_cover") default_cover: RequestBody,
+        @Part("doodle_preview[]") doodle_preview: RequestBody,
+    ): Call<ApiResponse<JsonElement>>
 
     @POST("artist/make")
     @Headers("Accept: application/json")
@@ -138,9 +159,6 @@ public interface APIInterface {
     ): Call<ApiResponse<List<PeopleListModel>>>
 
 
-
-
-
     @Headers("Accept: application/json")
     @GET("journal/search")
     fun searchJournal(
@@ -169,14 +187,14 @@ public interface APIInterface {
     @POST("journal/create")
     fun journalCreate(
         @Header("Authorization") token: String?,
-        @Part("cover_image\"; filename=\"myfile.jpg") coverImage : RequestBody,
-        @Part("category_id") category_id : RequestBody,
-        @Part("title") title : RequestBody?,
-        @Part("cover_bc") cover_bc : RequestBody?,
-        @Part("description") description : RequestBody?,
-        @Part("html_content") html_content : RequestBody?,
-        @Part("protection") protection : RequestBody?,
-        @Part("is_active") is_active : RequestBody?,
+        @Part("cover_image\"; filename=\"myfile.jpg") coverImage: RequestBody,
+        @Part("category_id") category_id: RequestBody,
+        @Part("title") title: RequestBody?,
+        @Part("cover_bc") cover_bc: RequestBody?,
+        @Part("description") description: RequestBody?,
+        @Part("html_content") html_content: RequestBody?,
+        @Part("protection") protection: RequestBody?,
+        @Part("is_active") is_active: RequestBody?,
     ): Call<ApiResponse<Journals>>
 
 
@@ -209,7 +227,6 @@ public interface APIInterface {
     fun privacy_policy(
         @Header("Authorization") token: String?
     ): Call<ApiResponse<OthersModel>>
-
 
 
     @GET("dashboard")

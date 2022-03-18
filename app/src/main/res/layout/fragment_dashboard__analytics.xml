@@ -8,6 +8,7 @@
         android:layout_height="match_parent"
         tools:context=".UI.Fragments.Dashboard_Analytics">
 
+
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/lineChart"
             android:layout_width="0dp"

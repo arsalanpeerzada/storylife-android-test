@@ -19,7 +19,8 @@ class SplashActivity : AppCompatActivity() {
         Handler().postDelayed({
             var tinyDB = TinyDB(this)
             var isLogin = tinyDB.getString("token")
-            if (isLogin != "") {
+            var fullname = tinyDB.getString("fullname")
+            if (isLogin != "" && fullname != "") {
                 startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                 this.finish()
             } else {

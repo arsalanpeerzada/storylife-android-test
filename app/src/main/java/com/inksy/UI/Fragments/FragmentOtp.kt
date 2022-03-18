@@ -25,7 +25,7 @@ import com.inksy.databinding.FragmentOtpBinding
 class FragmentOtp : Fragment(), OnKeyboardVisibilityListener {
 
     lateinit var binding: FragmentOtpBinding
-   // private val args: FragmentOtpArgs by navArgs()
+    // private val args: FragmentOtpArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,9 +38,21 @@ class FragmentOtp : Fragment(), OnKeyboardVisibilityListener {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentOtpBinding.inflate(layoutInflater)
-
         val mobileNumber = arguments?.getString("number")
-        binding.fragmentotptitle.text = getString(R.string.digit_code) + mobileNumber
+        var register = arguments?.getString("register")
+
+        if (!mobileNumber.isNullOrEmpty()) {
+            binding.fragmentotptitle.text = getString(R.string.digit_code) + mobileNumber
+        } else if (!register.isNullOrEmpty()) {
+            binding.fragmentotptitle.text = "Enter 4 digit code to verify the email address"
+            binding.otpView.itemCount = 4
+        } else {
+            binding.fragmentotptitle.text = "Enter 4 digit code to change your password"
+            binding.otpView.itemCount = 4
+
+        }
+
+
 
         object : CountDownTimer(30000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -72,35 +84,46 @@ class FragmentOtp : Fragment(), OnKeyboardVisibilityListener {
         }
 
 
-        binding.imageView2.setOnClickListener() {
+        binding.back.setOnClickListener() {
 
-            val number = arguments?.getString("number").toString()
-            val code = arguments?.getString("code").toString()
-            val bundle = Bundle()
-            bundle.putString("number",number )
-            bundle.putString("code", code)
+            if (!mobileNumber.isNullOrEmpty()) {
+                val number = arguments?.getString("number").toString()
+                val code = arguments?.getString("code").toString()
+                val bundle = Bundle()
+                bundle.putString("number", number)
+                bundle.putString("code", code)
 
-            val action = FragmentOtpDirections.actionFragmentOtpToNumberVerify()
+                findNavController().navigate(R.id.action_fragmentOtp_to_numberVerify, bundle)
+            } else if (!register.isNullOrEmpty()) {
+                findNavController().navigate(R.id.action_fragmentOtp_to_login)
+            } else {
+                findNavController().navigate(R.id.action_fragmentOtp_to_login)
+            }
 
-            findNavController().navigate(R.id.action_fragmentOtp_to_numberVerify,bundle)
         }
 
 
         binding.otpView.requestFocus()
 
-        binding.otpView.setOtpCompletionListener {
+        binding.otpView.setOtpCompletionListener()
+        {
 
-            val number = arguments?.getString("number").toString()
-            val code = arguments?.getString("code").toString()
 
-            val bundle = Bundle()
-            bundle.putString("number", number)
-            bundle.putString("code", code)
+            if (!mobileNumber.isNullOrEmpty()) {
+                val number = arguments?.getString("number").toString()
+                val code = arguments?.getString("code").toString()
 
-            val action = FragmentOtpDirections.actionFragmentOtpToLogin(
-            )
+                val bundle = Bundle()
+                bundle.putString("number", number)
+                bundle.putString("code", code)
 
-            findNavController().navigate(R.id.action_fragmentOtp_to_login,bundle)
+                findNavController().navigate(R.id.action_fragmentOtp_to_login, bundle)
+
+            } else if (!register.isNullOrEmpty()) {
+                findNavController().navigate(R.id.action_fragmentOtp_to_bio)
+            } else {
+                findNavController().navigate(R.id.action_fragmentOtp_to_forgetPassword2)
+            }
         }
 
         return binding.root
@@ -108,7 +131,8 @@ class FragmentOtp : Fragment(), OnKeyboardVisibilityListener {
 
 
     private fun setKeyboardVisibilityListener(onKeyboardVisibilityListener: OnKeyboardVisibilityListener) {
-        val parentView: View = (requireActivity().findViewById<View>(android.R.id.content) as ViewGroup).getChildAt(0)
+        val parentView: View =
+            (requireActivity().findViewById<View>(android.R.id.content) as ViewGroup).getChildAt(0)
         parentView.viewTreeObserver
             .addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
                 private var alreadyOpen = false

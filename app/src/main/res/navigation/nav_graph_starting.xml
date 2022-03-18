@@ -34,6 +34,16 @@
             app:destination="@id/login"
             app:enterAnim="@anim/left"
             app:exitAnim="@anim/left2" />
+        <action
+            app:enterAnim="@anim/left"
+            app:exitAnim="@anim/left2"
+            android:id="@+id/action_fragmentOtp_to_forgetPassword2"
+            app:destination="@id/forgetPassword2" />
+        <action
+            app:enterAnim="@anim/left"
+            app:exitAnim="@anim/left2"
+            android:id="@+id/action_fragmentOtp_to_bio"
+            app:destination="@id/bio" />
     </fragment>
     <fragment
         android:id="@+id/login"
@@ -48,8 +58,15 @@
             app:enterAnim="@anim/left"
             app:exitAnim="@anim/left2" />
         <action
+            app:enterAnim="@anim/left"
+            app:exitAnim="@anim/left2"
             android:id="@+id/action_login_to_numberVerify"
             app:destination="@id/numberVerify" />
+        <action
+            app:enterAnim="@anim/left"
+            app:exitAnim="@anim/left2"
+            android:id="@+id/action_login_to_fragmentOtp"
+            app:destination="@id/fragmentOtp" />
     </fragment>
     <fragment
         android:id="@+id/bio"
@@ -59,5 +76,16 @@
         <action
             android:id="@+id/action_bio_to_login"
             app:destination="@id/login" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_forget_password"
+        android:id="@+id/forgetPassword2"
+        android:name="com.inksy.UI.Fragments.ForgetPassword"
+        android:label="ForgetPassword" >
+        <action
+            android:id="@+id/action_forgetPassword2_to_login"
+            app:destination="@id/login"
+            app:enterAnim="@anim/right2"
+            app:exitAnim="@anim/right"/>
     </fragment>
 </navigation>

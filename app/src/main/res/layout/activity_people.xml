@@ -83,7 +83,7 @@
                     android:layout_marginStart="-21dp"
                     android:layout_marginBottom="@dimen/_8sdp"
                     android:elevation="1dp"
-                    android:src="@drawable/unfollowing"
+                    android:src="@drawable/follow"
                     app:layout_constraintBottom_toBottomOf="@+id/circleImageView"
                     app:layout_constraintStart_toStartOf="@+id/circleImageView" />
 

@@ -43,6 +43,13 @@ class PeopleView : ViewModel() {
         return mutableLiveDataPeople
     }
 
+    fun followRequests(
+        token: String
+    ): MutableLiveData<Resource<APIInterface.ApiResponse<List<PeopleListModel>>>>? {
+        mutableLiveDataPeople = peopleRepo!!.followRequests(token)
+        return mutableLiveDataPeople
+    }
+
 
     fun userFollow(
         id: Int,

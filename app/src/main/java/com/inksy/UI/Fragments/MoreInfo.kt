@@ -23,14 +23,18 @@ class MoreInfo : Fragment() {
 
     lateinit var binding: FragmentMoreInfoBinding
     lateinit var logoutView: LogoutView
+    lateinit var tinyDB: TinyDB
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
+        tinyDB = TinyDB(requireContext())
         binding = FragmentMoreInfoBinding.inflate(layoutInflater)
 
         binding.tvDoodle.setOnClickListener() {
@@ -43,9 +47,31 @@ class MoreInfo : Fragment() {
         binding.imgBlockList.setOnClickListener { openNewActivity(List::class.java) }
         binding.subtvimgBlockList.setOnClickListener { openNewActivity(List::class.java) }
 
-        binding.tvArtist.setOnClickListener { openNewActivity(ArtisePanel::class.java) }
-        binding.imgArtist.setOnClickListener { openNewActivity(ArtisePanel::class.java) }
-        binding.subtvArtist.setOnClickListener { openNewActivity(ArtisePanel::class.java) }
+        binding.tvArtist.setOnClickListener {
+            var isArtist = tinyDB.getInt("isArtist")
+            if (isArtist == 0) {
+                openNewActivity(ArtisePanel::class.java)
+            } else {
+                openNewActivity(ArtistDashboard::class.java)
+            }
+        }
+
+        binding.imgArtist.setOnClickListener {
+            var isArtist = tinyDB.getInt("isArtist")
+            if (isArtist == 0) {
+                openNewActivity(ArtisePanel::class.java)
+            } else {
+                openNewActivity(ArtistDashboard::class.java)
+            }
+        }
+        binding.subtvArtist.setOnClickListener {
+            var isArtist = tinyDB.getInt("isArtist")
+            if (isArtist == 0) {
+                openNewActivity(ArtisePanel::class.java)
+            } else {
+                openNewActivity(ArtistDashboard::class.java)
+            }
+        }
 
 
         binding.tvMore.setOnClickListener { openNewActivity(OtherActivity::class.java) }
@@ -128,7 +154,6 @@ class MoreInfo : Fragment() {
 
     fun logout() {
 
-        var tinyDB = TinyDB(requireContext())
 
         var token = tinyDB.getString("token")
 

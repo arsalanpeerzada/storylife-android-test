@@ -8,6 +8,7 @@ data class UserModel(
     @SerializedName("id") var id: Int? = null,
     @SerializedName("full_name") var fullName: String? = null,
     @SerializedName("bio") var bio: String? = null,
+    @SerializedName("is_artist") var is_artist: Int? = null,
     @SerializedName("email") var email: String? = null,
     @SerializedName("username") var username: String? = null,
     @SerializedName("phone_code") var phoneCode: String? = null,
@@ -24,5 +25,7 @@ data class UserModel(
     @SerializedName("journals") var journals: ArrayList<Journals>? = null,
     @SerializedName("doodles") var doodles: ArrayList<Pack>? = null,
     @SerializedName("followers") var followers: ArrayList<UserModel>? = null,
+    @SerializedName("is_email_verification") var is_email_verification: Int? = null,
+
 
     )

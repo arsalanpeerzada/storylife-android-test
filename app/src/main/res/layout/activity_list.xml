@@ -15,7 +15,7 @@
         tools:context=".UI.Fragments.Notifications_Fragment">
 
         <TextView
-            android:id="@+id/textView16"
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_leftside"
@@ -40,7 +40,7 @@
 
 
                 <ImageView
-                    android:id="@+id/emptyjournal"
+                    android:id="@+id/emptyImage"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_centerInParent="true"
@@ -50,7 +50,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/emptyjournal"
+                    android:layout_below="@id/emptyImage"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="20dp"
                     android:fontFamily="@font/montserrat_bold"
@@ -76,7 +76,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView16"
+            app:layout_constraintTop_toBottomOf="@+id/title"
             tools:itemCount="6"
             tools:listitem="@layout/item_notifications" />
 
