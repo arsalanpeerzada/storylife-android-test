@@ -3,6 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshListener"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="@+id/search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -36,7 +45,7 @@
                 android:visibility="visible" />
         </RelativeLayout>
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -68,198 +77,202 @@
                     android:layout_marginTop="@dimen/_5sdp"
                     android:background="@color/line_grey2"
                     app:layout_constraintEnd_toEndOf="@+id/seeall"
-                app:layout_constraintStart_toStartOf="@+id/journal"
-                app:layout_constraintTop_toBottomOf="@+id/journal" />
+                    app:layout_constraintStart_toStartOf="@+id/journal"
+                    app:layout_constraintTop_toBottomOf="@+id/journal" />
 
-            <View
-                android:visibility="visible"
-                android:id="@+id/view13"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="@color/line_grey2"
-                app:layout_constraintEnd_toEndOf="@+id/seeall1"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/journal"
-                app:layout_constraintTop_toBottomOf="@+id/alljournal" />
+                <View
+                    android:id="@+id/view13"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:background="@color/line_grey2"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="@+id/seeall1"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="@+id/journal"
+                    app:layout_constraintTop_toBottomOf="@+id/alljournal" />
 
 
-            <TextView
-                android:id="@+id/seeall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_16sdp"
-                android:fontFamily="@font/sfbold"
-                android:text="@string/see_all"
-                android:textColor="@color/appBlue"
-                android:textSize="@dimen/_8sdp"
-                app:layout_constraintBottom_toBottomOf="@+id/journal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/journal" />
+                <TextView
+                    android:id="@+id/seeall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_16sdp"
+                    android:fontFamily="@font/sfbold"
+                    android:text="@string/see_all"
+                    android:textColor="@color/appBlue"
+                    android:textSize="@dimen/_8sdp"
+                    app:layout_constraintBottom_toBottomOf="@+id/journal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/journal" />
 
-            <HorizontalScrollView
-                android:scrollbars="none"
-                android:id="@+id/scrollview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_7sdp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view12">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <HorizontalScrollView
+                    android:id="@+id/scrollview"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_7sdp"
+                    android:orientation="horizontal"
+                    android:scrollbars="none"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view12">
 
-                    <ImageView
-                        android:layout_marginTop="@dimen/_5sdp"
-                        android:id="@+id/create_journal"
-                        android:layout_width="@dimen/_116sdp"
-                        android:layout_height="@dimen/_165sdp"
-                        android:layout_marginStart="@dimen/_16sdp"
-                        android:background="@drawable/new_outline"
-                        android:gravity="center"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                    <TextView
+                        <ImageView
+                            android:id="@+id/create_journal"
+                            android:layout_width="@dimen/_116sdp"
+                            android:layout_height="@dimen/_165sdp"
+                            android:layout_marginStart="@dimen/_16sdp"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            android:background="@drawable/new_outline"
+                            android:gravity="center"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableBottom="@drawable/ic_baseline_add_32"
-                        android:drawableTint="@color/appBlue"
-                        android:text="New Journal"
-                        android:textSize="@dimen/_12sdp"
-                        app:layout_constraintBottom_toBottomOf="@+id/create_journal"
-                        app:layout_constraintEnd_toEndOf="@+id/create_journal"
-                        app:layout_constraintStart_toStartOf="@+id/create_journal"
-                        app:layout_constraintTop_toTopOf="@+id/create_journal" />
+                        <TextView
 
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/my_journal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/_16sdp"
-                        android:orientation="horizontal"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/create_journal"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:itemCount="10"
-                        tools:listitem="@layout/item_book" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </HorizontalScrollView>
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableBottom="@drawable/ic_baseline_add_32"
+                            android:drawableTint="@color/appBlue"
+                            android:text="New Journal"
+                            android:textSize="@dimen/_12sdp"
+                            app:layout_constraintBottom_toBottomOf="@+id/create_journal"
+                            app:layout_constraintEnd_toEndOf="@+id/create_journal"
+                            app:layout_constraintStart_toStartOf="@+id/create_journal"
+                            app:layout_constraintTop_toTopOf="@+id/create_journal" />
 
 
-            <TextView
-                android:visibility="visible"
-                android:id="@+id/alljournal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_24sdp"
-                android:fontFamily="@font/sfheavy"
-                android:text="All Journals"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_16sdp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/scrollview" />
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/my_journal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/_16sdp"
+                            android:orientation="horizontal"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/create_journal"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:itemCount="10"
+                            tools:listitem="@layout/item_book" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </HorizontalScrollView>
 
 
-            <TextView
-                android:visibility="visible"
-                android:id="@+id/seeall1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_16sdp"
-                android:fontFamily="@font/sfbold"
-                android:text="@string/see_all"
-                android:textColor="@color/appBlue"
-                android:textSize="@dimen/_8sdp"
-                app:layout_constraintBottom_toBottomOf="@+id/alljournal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/alljournal" />
+                <TextView
+                    android:id="@+id/alljournal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_24sdp"
+                    android:fontFamily="@font/sfheavy"
+                    android:text="All Journals"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_16sdp"
+                    android:visibility="visible"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/scrollview" />
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:visibility="visible"
-                android:id="@+id/rv_health"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_7sdp"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/alljournal"
-                app:layout_constraintTop_toBottomOf="@+id/view13"
-                tools:listitem="@layout/item_book" />
+                <TextView
+                    android:id="@+id/seeall1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_16sdp"
+                    android:fontFamily="@font/sfbold"
+                    android:text="@string/see_all"
+                    android:textColor="@color/appBlue"
+                    android:textSize="@dimen/_8sdp"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="@+id/alljournal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/alljournal" />
 
 
-            <TextView
-                android:visibility="visible"
-                android:id="@+id/alljournal2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_24sdp"
-                android:fontFamily="@font/sfheavy"
-                android:text="Family"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_16sdp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rv_health" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_marginBottom="30dp"
+                    android:id="@+id/rv_health"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_7sdp"
+                    android:orientation="horizontal"
+                    android:visibility="visible"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/alljournal"
+                    app:layout_constraintTop_toBottomOf="@+id/view13"
+                    tools:listitem="@layout/item_book" />
 
-            <View
-                android:visibility="visible"
-                android:id="@+id/view15"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="@color/line_grey2"
-                app:layout_constraintEnd_toEndOf="@+id/seeall2"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/journal"
-                app:layout_constraintTop_toBottomOf="@+id/alljournal2" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:visibility="visible"
-                android:layout_marginBottom="@dimen/dimen_20dp"
-                android:id="@+id/rv_health2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_7sdp"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/alljournal2"
-                app:layout_constraintTop_toBottomOf="@+id/view15"
-                tools:listitem="@layout/item_book" />
+                <TextView
+                    android:id="@+id/alljournal2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_24sdp"
+                    android:fontFamily="@font/sfheavy"
+                    android:text="Family"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_16sdp"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rv_health" />
 
-            <TextView
-                android:visibility="visible"
-                android:id="@+id/seeall2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_16sdp"
-                android:fontFamily="@font/sfbold"
-                android:text="@string/see_all"
-                android:textColor="@color/appBlue"
-                android:textSize="@dimen/_8sdp"
-                app:layout_constraintBottom_toBottomOf="@+id/alljournal2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/alljournal2" />
+                <View
+                    android:id="@+id/view15"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:background="@color/line_grey2"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/seeall2"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="@+id/journal"
+                    app:layout_constraintTop_toBottomOf="@+id/alljournal2" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_health2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_7sdp"
+                    android:layout_marginBottom="@dimen/dimen_20dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/alljournal2"
+                    app:layout_constraintTop_toBottomOf="@+id/view15"
+                    tools:listitem="@layout/item_book" />
+
+                <TextView
+                    android:id="@+id/seeall2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_16sdp"
+                    android:fontFamily="@font/sfbold"
+                    android:text="@string/see_all"
+                    android:textColor="@color/appBlue"
+                    android:textSize="@dimen/_8sdp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/alljournal2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/alljournal2" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
     </RelativeLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </layout>

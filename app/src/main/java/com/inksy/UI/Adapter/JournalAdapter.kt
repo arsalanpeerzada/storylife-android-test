@@ -10,6 +10,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.inksy.Interfaces.iOnClickListerner
@@ -20,21 +22,25 @@ import com.inksy.UI.Constants
 
 class JournalAdapter(
     var context: Context,
-    var list: Array<Int>,
+    var list: ArrayList<Journals>,
     var type: String,
     var ionclick: iOnClickListerner
 ) : RecyclerView.Adapter<JournalAdapter.ViewHolder>() {
 
     class ViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) {
 
-        lateinit var img: ImageView
+        lateinit var view: ImageView
         lateinit var like: ImageView
         lateinit var comment: ImageView
-        lateinit var cardView: CardView
+        lateinit var cardView: ConstraintLayout
         lateinit var name: TextView
         lateinit var desc: TextView
         lateinit var imgrecent: ImageView
         lateinit var tvrecent: TextView
+
+        lateinit var journalImage : ImageView
+        lateinit var journalTitle : TextView
+        lateinit var journalDesc : TextView
 
         lateinit var like_counter: TextView
         lateinit var comment_counter: TextView
@@ -44,7 +50,6 @@ class JournalAdapter(
 
             name = itemView.findViewById(R.id.name)
             desc = itemView.findViewById(R.id.text)
-            img = itemView.findViewById(R.id.image)
             like = itemView.findViewById(R.id.like)
             comment = itemView.findViewById(R.id.comment)
             like_counter = itemView.findViewById(R.id.like_count)
@@ -52,6 +57,11 @@ class JournalAdapter(
             cardView = itemView.findViewById(R.id.cardView)
             imgrecent = itemView.findViewById(R.id.imgrecent)
             tvrecent = itemView.findViewById(R.id.tvrecent)
+            view = itemView.findViewById(R.id.view)
+            journalImage = itemView.findViewById(R.id.journalImage)
+            journalDesc = itemView.findViewById(R.id.journalDesc)
+            journalTitle = itemView.findViewById(R.id.journalText)
+
         }
     }
 
@@ -63,6 +73,37 @@ class JournalAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind()
+        holder.imgrecent.visibility = View.VISIBLE
+        holder.tvrecent.visibility = View.VISIBLE
+        try {
+            holder.bind()
+            Glide.with(context).load(Constants.BASE_THUMBNAIL+list[position].coverImage).into(holder.journalImage)
+            holder.journalTitle.text = list[position].title
+            holder.journalDesc.text = list[position].description
+            holder.name.text = list[position].title
+            holder.desc.text = list[position].description
+
+            holder.like_counter.text = list[position].likesCount.toString()
+            holder.comment_counter.text = list[position].commentsCount.toString()
+
+            when (list[position].coverBc) {
+                "blue" -> {
+                    holder.view.backgroundTintList = ContextCompat.getColorStateList(context,R.color.journalBlue);
+                }
+                "green" -> {
+                    holder.view.backgroundTintList = ContextCompat.getColorStateList(context,R.color.journalGreen);
+                }
+                "red" -> {
+                    holder.view.backgroundTintList = ContextCompat.getColorStateList(context,R.color.journalRed);
+                }
+                "purple" -> {
+                    holder.view.backgroundTintList = ContextCompat.getColorStateList(context,R.color.journalPurple);
+                }
+            }
+
+        } catch (e: NullPointerException) {
+            Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show()
+        }
 
 
         if (position == 0) {
@@ -70,11 +111,11 @@ class JournalAdapter(
             holder.tvrecent.visibility = View.VISIBLE
         }
 
-        try {
-            Glide.with(context).load(list[position]).into(holder.img)
-        } catch (e: NullPointerException) {
-            Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show()
-        }
+//        try {
+//            Glide.with(context).load(list[position]).into(holder.img)
+//        } catch (e: NullPointerException) {
+//            Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show()
+//        }
         holder.name.setOnClickListener {
 
         }

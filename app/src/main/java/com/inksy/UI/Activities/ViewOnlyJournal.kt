@@ -1,31 +1,37 @@
 package com.inksy.UI.Activities
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.PopupMenu
+import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.inksy.Model.Journals
 import com.inksy.R
 import com.inksy.UI.Constants
 import com.inksy.UI.Dialogs.Comment_BottomSheet
 import com.inksy.UI.Dialogs.ReportDialog
+import com.inksy.UI.ViewModel.JournalView
+import com.inksy.Utils.TinyDB
 import com.inksy.databinding.ActivityViewOnlyJournalBinding
 
 
 class ViewOnlyJournal() : AppCompatActivity() {
-
+    var journalData: Journals? = null
     lateinit var binding: ActivityViewOnlyJournalBinding
     lateinit var like: ImageView
     lateinit var comment: ImageView
-
+    lateinit var journalView: JournalView
     lateinit var like_counter: TextView
     lateinit var comment_counter: TextView
-
+    lateinit var tinyDb: TinyDB
     var like_count: Int = 0
     var comment_count: Int = 0
     var followcounter: Int = 0
@@ -34,50 +40,44 @@ class ViewOnlyJournal() : AppCompatActivity() {
         binding = ActivityViewOnlyJournalBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        tinyDb = TinyDB(this)
+        journalView = ViewModelProviders.of(this)[JournalView::class.java]
+        journalView.init()
+        var token = tinyDb.getString("token")
+        Handler().postDelayed({
+            binding.loader.visibility = View.GONE
+        }, 3000)
+
         like = findViewById(R.id.like)
         comment = findViewById(R.id.comment)
         like_counter = findViewById(R.id.like_count)
         comment_counter = findViewById(R.id.comment_count)
 
-        var journalData: Journals? = null
+        followcounter = 0
+        binding.followCount.text = "0"
+
+        journalData = null
 
         journalData = intent.getSerializableExtra("data") as? Journals
 
-        if (journalData != null) {
-            like_count = journalData?.likesCount!!
-            comment_count = journalData?.commentsCount!!
+        if (journalData != null)
+            getData(journalData!!.id!!, token!!)
 
-            like_counter.text = like_count.toString()
-            comment_counter.text = comment_count.toString()
-        }
-
-
-
-        followcounter = 0
-        binding.followCount.text = "0"
         var string = intent.getStringExtra(Constants.journalType)
-
-        if (string.equals(Constants.people)) {
-            Glide.with(this).load(getDrawable(R.drawable.follow)).into(binding.follow)
-
-
-        } else {
-
-            Glide.with(this).load(getDrawable(R.drawable.unfollowing)).into(binding.follow)
-
-        }
 
         binding.like.setOnClickListener {
 
             if (journalData != null) {
-                if (journalData.isJournalLike == 0) {
+                if (journalData?.isJournalLike == 0) {
                     like_count++
                     like_counter.text = like_count.toString()
-                    journalData.isJournalLike = 1
+                    journalData?.isJournalLike = 1
+                    likeJournal(journalData?.id, true, token!!)
                 } else if (like_count == 1) {
-                    journalData.isJournalLike = 0
+                    journalData?.isJournalLike = 0
                     like_count--
                     like_counter.text = like_count.toString()
+                    likeJournal(journalData?.id, true, token!!)
                 }
 
                 Log.d("-----", like_count.toString())
@@ -85,7 +85,6 @@ class ViewOnlyJournal() : AppCompatActivity() {
                 Toast.makeText(this, "Journal data is empty", Toast.LENGTH_SHORT).show()
             }
         }
-
 
         binding.comment.setOnClickListener {
             if (comment_count == 0) {
@@ -102,15 +101,18 @@ class ViewOnlyJournal() : AppCompatActivity() {
 
         binding.follow.setOnClickListener()
         {
-            if (followcounter == 0) {
+            if (journalData?.isJournalFollow == 0) {
                 Glide.with(this).load(getDrawable(R.drawable.unfollowing)).into(binding.follow)
-
+                journalData?.isJournalFollow = 1
                 followcounter++
-                binding.followCount.text = "01"
+                binding.followCount.text = followcounter.toString()
+                followJournal(journalData?.id, token!!)
             } else {
+                journalData?.isJournalFollow = 0
                 followcounter--
-                binding.followCount.text = "00"
+                binding.followCount.text = followcounter.toString()
                 Glide.with(this).load(getDrawable(R.drawable.follow)).into(binding.follow)
+                followJournal(journalData?.id, token!!)
 
             }
         }
@@ -131,6 +133,8 @@ class ViewOnlyJournal() : AppCompatActivity() {
                     }
                     R.id.edit -> {
 
+                        Toast.makeText(this, "Feature coming soon", Toast.LENGTH_SHORT).show()
+
                         return@OnMenuItemClickListener true
                     }
                     R.id.Report -> {
@@ -141,7 +145,7 @@ class ViewOnlyJournal() : AppCompatActivity() {
                                 this@ViewOnlyJournal,
                                 this@ViewOnlyJournal,
                                 this@ViewOnlyJournal,
-                                journalData.id!!.toString()
+                                journalData?.id!!.toString()
                             ).show()
                         } else {
                             Toast.makeText(this, "Journal data is empty", Toast.LENGTH_SHORT).show()
@@ -153,6 +157,12 @@ class ViewOnlyJournal() : AppCompatActivity() {
                         return@OnMenuItemClickListener true
                     }
                     R.id.View -> {
+
+                        startActivity(
+                            Intent(this, ShowJournal::class.java)
+                                .putExtra("Edit", "Edit")
+                                .putExtra("JSON", journalData?.htmlContent)
+                        )
                         return@OnMenuItemClickListener true
                     }
 
@@ -164,7 +174,7 @@ class ViewOnlyJournal() : AppCompatActivity() {
             popupMenu.inflate(R.menu.view_journal_popup)
             popupMenu.show()
 
-            if (string.equals(Constants.people)) {
+            if (string.equals(Constants.person)) {
 
                 popupMenu.menu.findItem(R.id.Report).isVisible = false
                 popupMenu.menu.findItem(R.id.block).isVisible = false
@@ -181,6 +191,80 @@ class ViewOnlyJournal() : AppCompatActivity() {
 
         binding.ivBack.setOnClickListener {
             onBackPressed()
+        }
+    }
+
+    private fun likeJournal(id: Int?, like: Boolean, token: String) {
+
+        journalView.journalLike(
+            id.toString(),
+            token
+        )?.observe(this) {
+
+            if (it?.data?.status == 1) {
+                Toast.makeText(this, it.data.message, Toast.LENGTH_SHORT).show()
+
+            } else {
+                Toast.makeText(this, it?.data?.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun followJournal(id: Int?, token: String) {
+
+        journalView.journalFollow(
+            id.toString(),
+            token
+        )?.observe(this) {
+
+            if (it?.data?.status == 1) {
+                Toast.makeText(this, it.data.message, Toast.LENGTH_SHORT).show()
+
+            } else {
+                Toast.makeText(this, it?.data?.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    fun getData(journalid: Int, token: String) {
+        journalView.journalDetails(journalid, token)?.observe(this) {
+
+            var journals = it?.data?.data
+            journalData = journals
+            populatedata(journals!!)
+        }
+    }
+
+    fun populatedata(_journalData: Journals) {
+
+
+        if (_journalData != null) {
+
+            binding.journalTitle.text = _journalData.title
+            binding.subtext.text = _journalData.category?.categoryName
+            binding.subtext2.text = _journalData.description
+
+            Glide.with(this).load(Constants.BASE_IMAGE + _journalData.coverImage)
+                .into(binding.coverImage)
+
+            like_count = _journalData?.likesCount!!
+            comment_count = _journalData?.commentsCount!!
+
+            like_counter.text = like_count.toString()
+            comment_counter.text = comment_count.toString()
+            binding.followCount.text = _journalData.followersCount.toString()
+            followcounter = _journalData.followersCount!!
+
+            if (journalData?.isJournalFollow == 0) {
+                Glide.with(this).load(getDrawable(R.drawable.follow)).into(binding.follow)
+
+            } else {
+
+                Glide.with(this).load(getDrawable(R.drawable.unfollowing)).into(binding.follow)
+
+            }
+
+
         }
     }
 }

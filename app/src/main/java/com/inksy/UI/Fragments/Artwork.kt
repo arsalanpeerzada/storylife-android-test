@@ -9,10 +9,10 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.example.FeaturedPack
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.example.DoodlePack
 import com.example.example.Pack
 import com.inksy.Remote.Status
 import com.inksy.UI.Activities.ProfileActivity
@@ -23,17 +23,17 @@ import com.inksy.UI.ViewModel.DoodleView
 import com.inksy.Utils.TinyDB
 import com.inksy.databinding.FragmentArtworkBinding
 
-class Artwork : Fragment() {
+class Artwork : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     lateinit var binding: FragmentArtworkBinding
     lateinit var doodleView: DoodleView
     var token: String = ""
     lateinit var tinyDB: TinyDB
-    var feature: ArrayList<FeaturedPack> = ArrayList()
+    var feature: ArrayList<DoodlePack> = ArrayList()
     var pack: ArrayList<Pack> = ArrayList()
     lateinit var featureAdapter: ArtworkAdapter
     lateinit var packAdapter: ArtworkAdapter
-
+    lateinit var refreshLayout: SwipeRefreshLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -51,7 +51,7 @@ class Artwork : Fragment() {
         tinyDB = TinyDB(requireContext())
         token = tinyDB.getString("token").toString()
 
-        getData(token)
+
         binding = FragmentArtworkBinding.inflate(layoutInflater)
 
 
@@ -66,7 +66,12 @@ class Artwork : Fragment() {
         }
 
         binding.seeall1.setOnClickListener {
-            requireContext().startActivity(Intent(requireContext(),ViewAll::class.java).putExtra(Constants.activity,Constants.doodleViewAll))
+            requireContext().startActivity(
+                Intent(requireContext(), ViewAll::class.java).putExtra(
+                    Constants.activity,
+                    Constants.doodleViewAll
+                )
+            )
 
         }
 
@@ -82,7 +87,15 @@ class Artwork : Fragment() {
             }
             false
         })
+        refreshLayout = binding.swipe
 
+        refreshLayout.setOnRefreshListener(this)
+        refreshLayout.post(Runnable {
+            refreshLayout.setRefreshing(true)
+
+            // Fetching data from server
+            getData(token)
+        })
 
 
         return binding.root
@@ -123,14 +136,20 @@ class Artwork : Fragment() {
 
                     packAdapter = ArtworkAdapter(requireContext(), pack, "Pack")
                     binding.rvBestsellers.adapter = packAdapter
+                    refreshLayout.isRefreshing = false;
 
-
-                    Toast.makeText(requireContext(), it?.data?.message, Toast.LENGTH_SHORT).show()
                 }
                 Status.LOADING -> {}
-                Status.ERROR -> {}
+                Status.ERROR -> {
+                    refreshLayout.isRefreshing = false;
+                }
             }
         }
+    }
+
+
+    override fun onRefresh() {
+        getData(token)
     }
 
 

@@ -311,7 +311,7 @@
 
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_health"
+                    android:id="@+id/rv_doodle"
                     android:layout_width="0dp"
                     android:layout_marginBottom="@dimen/_20sdp"
                     android:layout_height="wrap_content"

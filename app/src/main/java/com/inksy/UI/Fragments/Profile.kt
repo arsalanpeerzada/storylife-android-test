@@ -39,10 +39,7 @@ class Profile : Fragment(), iOnClickListerner, OnChangeStateClickListener {
     var token: String = ""
     lateinit var peopleView: PeopleView
     lateinit var editProfileView: EditProfileView
-    override fun onclick(position: Int) {
-        super.onclick(position)
-        Comment_BottomSheet().show(childFragmentManager, " ");
-    }
+
 
     lateinit var tinydb: TinyDB
     lateinit var binding: FragmentProfileBinding
@@ -266,7 +263,7 @@ class Profile : Fragment(), iOnClickListerner, OnChangeStateClickListener {
         if (like) {
             likeJournal(list?.get(position)?.id, like)
         } else {
-
+            likeJournal(list?.get(position)?.id, like)
         }
     }
 
@@ -280,12 +277,15 @@ class Profile : Fragment(), iOnClickListerner, OnChangeStateClickListener {
         )?.observe(requireActivity()) {
 
             if (it?.data?.status == 1) {
-                Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), it.data.message, Toast.LENGTH_SHORT).show()
 
             } else {
-                Toast.makeText(requireContext(), it?.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), it?.data?.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
-
+    override fun onclick(position: Int) {
+        super.onclick(position)
+        Comment_BottomSheet().show(childFragmentManager, " ");
+    }
 }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -92,10 +93,11 @@ class EditProfile : Fragment() {
 //                val action = EditProfileDirections.actionEditProfileToProfile()
 //                findNavController().navigate(action)
 
+                var uri: Uri = "asdasdasd".toUri()
 
                 var requestBody = RequestBody.create(
                     ".png".toMediaTypeOrNull(),
-                    FileUtil.from(requireContext(), Uri.EMPTY)
+                    FileUtil.from(requireContext(), uri)
                 )
 
                 editProfileView.profile(
@@ -121,13 +123,13 @@ class EditProfile : Fragment() {
 
             if (binding.password1.text.isNullOrEmpty()) {
                 binding.emailError.visibility = View.VISIBLE
-            }else{
+            } else {
                 binding.emailError.visibility = View.GONE
             }
             if (binding.confirmpassword1.text.isNullOrEmpty()) {
                 binding.passwordError.visibility = View.VISIBLE
                 binding.emailError.text = getString(R.string.password_cannot_be_empty)
-            }else{
+            } else {
                 binding.passwordError.visibility = View.GONE
             }
 

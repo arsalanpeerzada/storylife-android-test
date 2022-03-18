@@ -5,15 +5,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.example.example.DoodlePack
+import com.inksy.Interfaces.iOnClickListerner
+import com.inksy.Remote.Status
 import com.inksy.UI.Activities.Doodle_Drawing
 import com.inksy.UI.Adapter.DashboardApprovedAdapter
 import com.inksy.UI.Constants
-import com.inksy.Interfaces.iOnClickListerner
+import com.inksy.UI.ViewModel.DoodleView
+import com.inksy.Utils.TinyDB
 import com.inksy.databinding.FragmentDashboardApprovedBinding
 
-class DashboardApproved : Fragment() {
-
+class DashboardApproved : Fragment(), iOnClickListerner {
+    lateinit var doodleView: DoodleView
+    var doodleApprovedlist: ArrayList<DoodlePack> = ArrayList()
+    lateinit var tinydb: TinyDB
+    var token = ""
+    lateinit var _adapter: DashboardApprovedAdapter
     lateinit var binding: FragmentDashboardApprovedBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,20 +36,47 @@ class DashboardApproved : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentDashboardApprovedBinding.inflate(layoutInflater)
+        tinydb = TinyDB(requireContext())
+        token = tinydb.getString("token").toString()
+        doodleView = ViewModelProvider(this)[DoodleView::class.java]
+        doodleView.init()
 
-        binding.rvDashboardApproved.adapter =
-            DashboardApprovedAdapter(requireContext(), object : iOnClickListerner {
-                override fun onclick(position: Int) {
-                    requireContext().startActivity(
-                        Intent(
-                            requireContext(),
-                            Doodle_Drawing::class.java
-                        ).putExtra("fragment", Constants.fragment_approved)
-                    )
-                }
-            })
+        getData()
+        _adapter = DashboardApprovedAdapter(requireContext(), doodleApprovedlist, this)
+        binding.rvDashboardApproved.adapter = _adapter
+
 
         return binding.root
+    }
+
+    private fun getData() {
+        doodleView.doodlePending(token)?.observe(requireActivity()) {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    doodleApprovedlist = it?.data?.data as ArrayList<DoodlePack>
+                    _adapter = DashboardApprovedAdapter(requireContext(), doodleApprovedlist, this)
+
+                    binding.rvDashboardApproved.adapter = _adapter
+
+
+                }
+                Status.LOADING -> {}
+                Status.ERROR -> {
+                    Toast.makeText(requireContext(), it?.data?.message, Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        }
+    }
+
+    override fun onclick(position: Int) {
+
+        requireContext().startActivity(
+            Intent(
+                requireContext(),
+                Doodle_Drawing::class.java
+            ).putExtra("fragment", Constants.fragment_pending).putExtra("Id", position)
+        )
     }
 
 

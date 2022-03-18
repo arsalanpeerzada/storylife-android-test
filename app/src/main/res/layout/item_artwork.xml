@@ -8,10 +8,10 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/imageView7"
-        app:cardCornerRadius="@dimen/_8sdp"
-        android:layout_margin="1dp"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/_125sdp"
         android:layout_height="wrap_content"
+        android:layout_margin="1dp"
+        app:cardCornerRadius="@dimen/_8sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -31,21 +31,21 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <View
-                android:background="@color/line_blue"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
+                android:background="@color/line_blue"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/image" />
 
             <RelativeLayout
-                android:background="@drawable/price_tag"
-                android:orientation="horizontal"
-                android:elevation="100dp"
-                android:layout_marginBottom="-20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="-20dp"
+                android:background="@drawable/price_tag"
+                android:elevation="100dp"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="@+id/image"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
@@ -80,31 +80,35 @@
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_25sdp"
-        android:fontFamily="@font/sfheavy"
-        android:text="Calender"
-        android:textColor="@color/black"
-        android:textSize="@dimen/_16sdp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_25sdp"
+                android:ellipsize="end"
+                android:fontFamily="@font/sfheavy"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingHorizontal="10dp"
+                android:text="Calender adasdasd "
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image" />
 
 
-          <TextView
-        android:layout_width="0dp"
-        android:layout_height="@dimen/_30sdp"
-              android:layout_marginTop="@dimen/_20sdp"
-              android:layout_marginBottom="0.5dp"
-              android:background="@drawable/bottom_round"
-              android:gravity="center"
-              android:text="Buy Now"
-              android:textColor="@color/white"
-              android:textSize="@dimen/_8sdp"
-              app:layout_constraintBottom_toBottomOf="parent"
-              app:layout_constraintEnd_toEndOf="parent"
-              app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@+id/title" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginBottom="0.5dp"
+                android:background="@drawable/bottom_round"
+                android:gravity="center"
+                android:text="Buy Now"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_8sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

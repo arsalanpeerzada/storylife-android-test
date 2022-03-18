@@ -3,6 +3,7 @@ package com.inksy.UI.Fragments
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,20 +11,17 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView.OnEditorActionListener
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
-import com.bumptech.glide.Glide
 import com.inksy.Model.Categories
 import com.inksy.Model.Journals
 import com.inksy.Model.People
 import com.inksy.R
 import com.inksy.Remote.Status
 import com.inksy.UI.Activities.ProfileActivity
-import com.inksy.UI.Activities.StartingActivity
 import com.inksy.UI.Activities.ViewAll
 import com.inksy.UI.Constants
 import com.inksy.UI.ViewModel.DashboardView
@@ -39,11 +37,9 @@ class Journal : Fragment() {
     private lateinit var adapterViewPager: MyPagerAdapter
     lateinit var v: Tablayout1Binding
     lateinit var dashboardView: DashboardView
-    lateinit var categories: ArrayList<Categories>
-    lateinit var otherJournals: ArrayList<Journals>
     lateinit var people: People
-    lateinit var myjournals: ArrayList<Journals>
     lateinit var tinyDB: TinyDB
+
     var token: String = " "
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,10 +51,15 @@ class Journal : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentJournalBinding.inflate(layoutInflater)
-
+        vpPager = binding.vpPager
         dashboardView = ViewModelProvider(requireActivity())[DashboardView::class.java]
         dashboardView.init()
         tinyDB = TinyDB(requireContext())
+
+
+        Handler().postDelayed({
+            binding.loader.visibility = View.GONE
+        }, 3000)
 
         token = tinyDB.getString("token").toString()
         v = binding.include3
@@ -95,23 +96,25 @@ class Journal : Fragment() {
             }
             false
         })
-        getData()
+
+        selectTab(0)
+        setupViewPager()
+
+
+//        getData()
         return binding.root
     }
+
 
     private fun openactivity(text: String) {
 
         Log.d("searchText", text)
         if (vpPager.currentItem == 0) {
 
-            requireContext().startActivity(
-                Intent(requireContext(), ViewAll::class.java)
-                    .putExtra(Constants.activity, Constants.sub_journalSearch)
-
-            )
+            searchUser(text, 0)
 
         } else if (vpPager.currentItem == 1) {
-            searchUser(text)
+            searchUser(text, 1)
 
         }
     }
@@ -127,11 +130,7 @@ class Journal : Fragment() {
 
     class MyPagerAdapter(
         fragmentManager: FragmentManager?,
-        var myjournal: ArrayList<Journals>,
-        var otherJournals: ArrayList<Journals>,
-        var people: People
-    ) :
-        FragmentPagerAdapter(fragmentManager!!) {
+    ) : FragmentPagerAdapter(fragmentManager!!) {
         // Returns total number of pages
         override fun getCount(): Int {
             return NUM_ITEMS
@@ -140,8 +139,8 @@ class Journal : Fragment() {
         // Returns the fragment to display for that page
         override fun getItem(position: Int): Fragment {
             return when (position) {
-                0 -> Sub_Journal(myjournal,otherJournals)
-                1 -> Sub_People(people)
+                0 -> Sub_Journal()
+                1 -> Sub_People()
 
                 else -> null!!
             }
@@ -175,84 +174,111 @@ class Journal : Fragment() {
         }
     }
 
-    private fun getData() {
+//    private fun getData() {
+//
+//
+//        val mytoken = "Bearer $token"
+//        val image = tinyDB.getString("avatar")
+//        if (!image.isNullOrEmpty())
+//            Glide.with(requireContext()).load(Constants.BASE_IMAGE + image).into(binding.profile)
+//
+//        dashboardView.getData(mytoken)?.observe(requireActivity()) { it ->
+//
+//            when (it.status) {
+//                Status.SUCCESS -> {
+//
+//                    categories = it?.data?.data?.categories!!
+//
+//                    myjournals = it.data.data?.journals!!
+//
+//                    otherJournals = it.data.data?.followedJournals!!
+//
+//                    people = it.data.data?.people!!
+//
+//
+//
+//                }
+//
+//                Status.ERROR -> {
+//
+//                    tinyDB.clear()
+//
+//                    requireContext().startActivity(
+//                        Intent(
+//                            requireContext(),
+//                            StartingActivity::class.java
+//                        )
+//                    )
+//                    Toast.makeText(requireContext(), "Token Expired", Toast.LENGTH_SHORT).show()
+//                    refreshLayout.isRefreshing = false;
+//                }
+//                Status.LOADING -> {}
+//
+//            }
+//        }
+//    }
 
+    fun searchUser(text: String, i: Int) {
 
         val mytoken = "Bearer $token"
-        val image = tinyDB.getString("avatar")
-        Glide.with(requireContext()).load(Constants.BASE_IMAGE+image).into(binding.profile)
 
-        dashboardView.getData(mytoken)?.observe(requireActivity()) { it ->
+        if (i == 0){
+            dashboardView.searchJournal(text, mytoken)?.observe(requireActivity()) { it ->
 
-            when (it.status) {
-                Status.SUCCESS -> {
+                when (it.status) {
+                    Status.SUCCESS -> {
 
-                    categories = it?.data?.data?.categories!!
+                        var data = it?.data?.data
 
-                    myjournals = it.data.data?.journals!!
-
-                    otherJournals = it.data.data?.followedJournals!!
-
-                    people = it.data.data?.people!!
-
-
-
-                    setupViewPager(myjournals, otherJournals, people)
-                }
-
-                Status.ERROR -> {
-
-                    tinyDB.clear()
-
-                    requireContext().startActivity(
-                        Intent(
-                            requireContext(),
-                            StartingActivity::class.java
+                        requireContext().startActivity(
+                            Intent(requireContext(), ViewAll::class.java)
+                                .putExtra(Constants.activity, Constants.sub_journalSearch)
+                                .putExtra("List", data as Serializable)
+                                .putExtra("Data", true)
                         )
-                    )
-                    Toast.makeText(requireContext(), "Token Expired", Toast.LENGTH_SHORT).show()
-                }
-                Status.LOADING -> {}
+                    }
 
+                    Status.ERROR -> {
+                    }
+                    Status.LOADING -> {}
+
+                }
+            }
+        }else {
+            dashboardView.searchUser(text, mytoken)?.observe(requireActivity()) { it ->
+
+                when (it.status) {
+                    Status.SUCCESS -> {
+
+                        var data = it?.data?.data
+
+                        requireContext().startActivity(
+                            Intent(requireContext(), ViewAll::class.java)
+                                .putExtra(Constants.activity, Constants.peopleSearch)
+                                .putExtra("List", data as Serializable)
+                                .putExtra("Data", true)
+                        )
+
+
+                    }
+
+                    Status.ERROR -> {
+
+                    }
+                    Status.LOADING -> {}
+
+                }
             }
         }
-    }
-
-    fun searchUser(text: String) {
-        val mytoken = "Bearer $token"
-        dashboardView.searchUser(text, mytoken)?.observe(requireActivity()) { it ->
-
-            when (it.status) {
-                Status.SUCCESS -> {
-
-                    var data = it?.data?.data
-
-                    requireContext().startActivity(
-                        Intent(requireContext(), ViewAll::class.java)
-                            .putExtra(Constants.activity, Constants.peopleSearch)
-                            .putExtra("List", data as Serializable)
-                            .putExtra("Data", true)
-                    )
 
 
-                }
-
-                Status.ERROR -> {
-
-                }
-                Status.LOADING -> {}
-
-            }
-        }
     }
 
     fun setupViewPager(
-        myjournal: ArrayList<Journals>,
-        otherJournals: ArrayList<Journals>,
-        people: People
+
     ) {
-        vpPager = binding.vpPager
-        adapterViewPager = MyPagerAdapter(childFragmentManager, myjournal, otherJournals, people)
+
+        adapterViewPager = MyPagerAdapter(childFragmentManager)
         vpPager.adapter = adapterViewPager
 
 

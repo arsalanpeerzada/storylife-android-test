@@ -7,11 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.gson.Gson
 import com.inksy.Interfaces.OnChangeStateClickListener
 import com.inksy.Interfaces.iOnClickListerner
 import com.inksy.Model.Categories
 import com.inksy.Model.Journals
+import com.inksy.Remote.Status
 import com.inksy.UI.Activities.CreateActivity
 import com.inksy.UI.Activities.ViewAll
 import com.inksy.UI.Adapter.BookAdapter
@@ -23,14 +27,14 @@ import com.inksy.Utils.TinyDB
 import com.inksy.databinding.FragmentSubJournalBinding
 
 
-class Sub_Journal(var list: ArrayList<Journals>, var _otherJournals: ArrayList<Journals>) :
-    Fragment(), OnChangeStateClickListener {
+class Sub_Journal :
+    Fragment(), OnChangeStateClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     lateinit var binding: FragmentSubJournalBinding
     lateinit var dashboardView: DashboardView
-    lateinit var categories: ArrayList<Categories>
-    lateinit var otherJournals: ArrayList<Journals>
-    lateinit var myjournals: ArrayList<Journals>
+    var otherJournals: ArrayList<Journals> = ArrayList()
+    var myjournals: ArrayList<Journals> = ArrayList()
+    lateinit var refreshLayout: SwipeRefreshLayout
     var token: String = ""
     lateinit var tinyDB: TinyDB
 
@@ -46,54 +50,8 @@ class Sub_Journal(var list: ArrayList<Journals>, var _otherJournals: ArrayList<J
         binding = FragmentSubJournalBinding.inflate(layoutInflater)
         tinyDB = TinyDB(requireContext())
         token = tinyDB.getString("token")!!
-
-        if (list.isNotEmpty() || _otherJournals.isNotEmpty()) {
-            myjournals = list
-
-            binding.myJournal.adapter = BookAdapter(
-                requireContext(),
-                myjournals,
-                " ",
-                object : iOnClickListerner {
-                    override fun onclick(position: Int) {
-                        Comment_BottomSheet().show(childFragmentManager, " ");
-                    }
-                },
-                this
-            )
-            otherJournals = _otherJournals as ArrayList<Journals>
-            binding.rvHealth.adapter = BookAdapter(
-                requireContext(),
-                otherJournals,
-                " ",
-                object : iOnClickListerner {
-                    override fun onclick(position: Int) {
-                        Comment_BottomSheet().show(childFragmentManager, " ");
-                    }
-                },
-                this
-            )
-
-        } else {
-            binding.layout.visibility = View.GONE
-            binding.layoutemptyChat.visibility = View.VISIBLE
-        }
-
-//
-//        binding.rvHealth.adapter = BookAdapter(requireContext(), list,Constants.person, object : iOnClickListerner {
-//            override fun onclick(position: Int) {
-//                Comment_BottomSheet().show(childFragmentManager, " ");
-//            }
-//        })
-//        binding.rvHealth2.adapter = BookAdapter(requireContext(), list,Constants.person, object : iOnClickListerner {
-//            override fun onclick(position: Int) {
-//               var comment = Comment_BottomSheet().let {
-//                    it.show(childFragmentManager, "")
-//
-//                }
-//            }
-//        })
-
+        refreshLayout = binding.refreshListener
+        dashboardView = ViewModelProvider(requireActivity())[DashboardView::class.java]
         binding.createJournal.setOnClickListener {
             requireContext().startActivity(Intent(requireContext(), CreateActivity::class.java))
         }
@@ -123,6 +81,16 @@ class Sub_Journal(var list: ArrayList<Journals>, var _otherJournals: ArrayList<J
             )
         }
 
+
+        refreshLayout.setOnRefreshListener(this)
+        refreshLayout.post(Runnable {
+            refreshLayout.setRefreshing(true)
+
+            // Fetching data from server
+            getData()
+        })
+
+
         return binding.root
     }
 
@@ -130,9 +98,9 @@ class Sub_Journal(var list: ArrayList<Journals>, var _otherJournals: ArrayList<J
         super.onStateChange(position, like)
 
         if (like) {
-            likeJournal(list[position].id, like)
+            likeJournal(myjournals[position].id, like)
         } else {
-
+            likeJournal(myjournals[position].id, like)
         }
     }
 
@@ -147,12 +115,98 @@ class Sub_Journal(var list: ArrayList<Journals>, var _otherJournals: ArrayList<J
         )?.observe(requireActivity()) {
 
             if (it?.data?.status == 1) {
-                Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), it.data.message, Toast.LENGTH_SHORT).show()
 
             } else {
-                Toast.makeText(requireContext(), it?.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), it?.data?.message, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun getData() {
+
+
+        val mytoken = "Bearer $token"
+
+        dashboardView.getData(mytoken)?.observe(requireActivity()) { it ->
+
+            when (it.status) {
+                Status.SUCCESS -> {
+
+                    // people = it.data?.data?.people
+                    myjournals = it.data?.data?.journals!!
+                    otherJournals = it.data?.data?.followedJournals!!
+
+                    var categoriesList = it.data?.data!!.categories
+                    var list = ArrayList<String>()
+                    for (i in 0 until categoriesList!!.size) {
+                        var json = categoriesList.get(i)
+                        var gson = Gson()
+                        list.add(gson.toJson(json))
+
+                    }
+                    tinyDB.putListString("categoriesList", list)
+                    populate()
+
+                    refreshLayout.isRefreshing = false;
+                }
+
+                Status.ERROR -> {
+                    refreshLayout.isRefreshing = false;
+                }
+                Status.LOADING -> {}
+
+            }
+        }
+    }
+
+
+    fun populate() {
+        if (myjournals.isNotEmpty() || otherJournals.isNotEmpty()) {
+            myjournals = myjournals
+
+            binding.myJournal.adapter = BookAdapter(
+                requireContext(),
+                myjournals,
+                " ",
+                object : iOnClickListerner {
+                    override fun onclick(position: Int) {
+                        Comment_BottomSheet().show(childFragmentManager, " ");
+                    }
+                },
+                this
+            )
+            otherJournals = otherJournals as ArrayList<Journals>
+            binding.rvHealth.adapter = BookAdapter(
+                requireContext(),
+                otherJournals,
+                " ",
+                object : iOnClickListerner {
+                    override fun onclick(position: Int) {
+                        Comment_BottomSheet().show(childFragmentManager, " ");
+                    }
+                },
+                this
+            )
+
+        } else {
+            binding.layout.visibility = View.GONE
+            binding.layoutemptyChat.visibility = View.VISIBLE
+        }
+    }
+
+    override fun onRefresh() {
+        refresh()
+    }
+
+    fun refresh() {
+        getData()
+
+    }
+
+    override fun onResume() {
+        refresh()
+        super.onResume()
     }
 
 

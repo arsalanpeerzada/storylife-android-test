@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.inksy.R
 import com.inksy.databinding.FragmentCreatejournalBinding
 
 class createjournal : Fragment() {
@@ -23,12 +24,14 @@ class createjournal : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentCreatejournalBinding.inflate(layoutInflater)
 
+
         binding.ivBack.setOnClickListener {
             requireActivity().finish()
         }
 
         binding.emptyjournal.setOnClickListener {
-            val action = createjournalDirections.actionCreatejournalToCreateJournalBackgroundBorderColor()
+            val action =
+                createjournalDirections.actionCreatejournalToCreateJournalBackgroundBorderColor()
             findNavController().navigate(action)
         }
         return binding.root

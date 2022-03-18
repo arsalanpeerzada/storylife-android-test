@@ -8,6 +8,28 @@
         android:layout_height="match_parent"
         tools:context=".UI.Fragments.create_journal_entry">
 
+        <RelativeLayout
+            android:id="@+id/loader"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/fullblackpatti"
+            android:elevation="10dp">
+
+            <com.github.ybq.android.spinkit.SpinKitView
+                android:id="@+id/spin_kit"
+                style="@style/SpinKitView.Large.Circle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                app:SpinKit_Color="@color/appBlue"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </RelativeLayout>
+
 
         <ImageView
             android:id="@+id/ivBack"
@@ -52,9 +74,9 @@
                 android:layout_height="0dp">
 
                 <ImageView
-                    android:id="@+id/imageView10"
+                    android:id="@+id/coverImage"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="310dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/image"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -63,7 +85,7 @@
 
 
                 <TextView
-                    android:id="@+id/textView38"
+                    android:id="@+id/journalTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_16sdp"
@@ -73,7 +95,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_20sdp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView10" />
+                    app:layout_constraintTop_toBottomOf="@+id/coverImage" />
 
 
                 <TextView
@@ -85,8 +107,8 @@
                     android:text="@string/select_category"
                     android:textColor="@color/appBlue"
                     android:textSize="@dimen/_14sdp"
-                    app:layout_constraintStart_toStartOf="@+id/textView38"
-                    app:layout_constraintTop_toBottomOf="@+id/textView38" />
+                    app:layout_constraintStart_toStartOf="@+id/journalTitle"
+                    app:layout_constraintTop_toBottomOf="@+id/journalTitle" />
 
 
                 <TextView
@@ -102,7 +124,7 @@
                     android:text="@string/creator_text"
                     android:textSize="@dimen/_12sdp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/textView38"
+                    app:layout_constraintStart_toStartOf="@+id/journalTitle"
                     app:layout_constraintTop_toBottomOf="@+id/subtext" />
 
 
@@ -110,19 +132,19 @@
         </ScrollView>
 
         <View
-            android:visibility="gone"
             android:id="@+id/viewtab"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
             android:background="@drawable/round_border_edittext_solid_grey"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_marginHorizontal="@dimen/_12sdp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_12sdp"
             android:layout_marginBottom="10dp"
             android:weightSum="4"
             app:layout_constraintBottom_toBottomOf="@+id/viewtab"
@@ -194,7 +216,7 @@
                     android:layout_width="@dimen/_26sdp"
                     android:layout_height="@dimen/_26sdp"
                     android:layout_marginStart="@dimen/_8sdp"
-                    android:src="@drawable/unfollowing"
+                    android:src="@drawable/follow"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/view2"
                     app:layout_constraintTop_toTopOf="@+id/like" />
@@ -217,8 +239,8 @@
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
                 android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
                 android:layout_marginStart="@dimen/_8sdp"
+                android:layout_weight="1"
                 android:src="@drawable/share"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/follow_count"

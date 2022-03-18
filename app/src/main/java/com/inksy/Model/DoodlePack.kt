@@ -3,7 +3,7 @@ package com.example.example
 import com.google.gson.annotations.SerializedName
 
 
-data class Pack(
+data class DoodlePack(
 
     @SerializedName("id") var id: Int? = null,
     @SerializedName("pack_title") var packTitle: String? = null,

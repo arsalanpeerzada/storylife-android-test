@@ -19,8 +19,11 @@ data class Journals(
     @SerializedName("created_at") var createdAt: String? = null,
     @SerializedName("updated_at") var updatedAt: String? = null,
     @SerializedName("is_journal_like") var isJournalLike: Int? = null,
-    @SerializedName("likes_count"     ) var likesCount    : Int?      = null,
-    @SerializedName("comments_count"  ) var commentsCount : Int?      = null,
-    @SerializedName("category") var category: Category? = null
+    @SerializedName("is_journal_follow") var isJournalFollow: Int? = null,
+    @SerializedName("likes_count") var likesCount: Int? = null,
+    @SerializedName("comments_count") var commentsCount: Int? = null,
+    @SerializedName("followers_count") var followersCount: Int? = null,
+    @SerializedName("category") var category: Category? = Category()
+
 
 ) : Serializable

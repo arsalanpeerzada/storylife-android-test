@@ -58,8 +58,17 @@ class PeopleAdapter(
             holder.bind()
 
 
-            if (list[position].avatar != null){
-                Glide.with(context).load(Constants.BASE_IMAGE + list[position].avatar).into(holder.peopleImage)
+            if (list[position].avatar != null) {
+                Glide.with(context).load(Constants.BASE_IMAGE + list[position].avatar)
+                    .into(holder.peopleImage)
+            } else {
+                Glide.with(context).clear(holder.peopleImage);
+                holder.peopleImage.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.avatar_placeholder
+                    )
+                );
             }
 
 
@@ -94,6 +103,7 @@ class PeopleAdapter(
                 Glide.with(context).load(ContextCompat.getDrawable(context, R.drawable.follow))
                     .into(holder.followClick)
                 list[position].isFollowed = 0
+                onChangeStateClickListener.onStateChange(position, false)
             }
         }
 

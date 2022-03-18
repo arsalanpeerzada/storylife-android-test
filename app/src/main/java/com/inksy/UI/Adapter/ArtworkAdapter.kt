@@ -10,7 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.example.FeaturedPack
+import com.example.example.DoodlePack
 import com.example.example.Pack
 import com.inksy.R
 import com.inksy.UI.Activities.PackActivity
@@ -48,7 +48,7 @@ class ArtworkAdapter(
             holder.bind()
 
             if (type == "Feature") {
-                var mylist = list as ArrayList<FeaturedPack>
+                var mylist = list as ArrayList<DoodlePack>
 
                 setup1(holder, mylist, position)
             } else {
@@ -78,7 +78,7 @@ class ArtworkAdapter(
             .into(holder.image)
     }
 
-    private fun setup1(holder: ViewHolder, mylist: ArrayList<FeaturedPack>, position: Int) {
+    private fun setup1(holder: ViewHolder, mylist: ArrayList<DoodlePack>, position: Int) {
         holder.title.text = mylist[position].packTitle
         val number2digits: String = String.format("%.2f", mylist[position].price)
         holder.price_Tag.text = number2digits

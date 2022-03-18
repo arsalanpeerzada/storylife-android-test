@@ -12,11 +12,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.NumberPicker
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.deishelon.roundedbottomsheet.RoundedBottomSheetDialog
-import com.deishelon.roundedbottomsheet.RoundedBottomSheetDialogFragment
+import com.google.gson.Gson
+import com.inksy.Model.Categories
 import com.inksy.R
 import com.inksy.UI.Activities.Privacy
 import com.inksy.Utils.TinyDB
@@ -24,13 +26,18 @@ import com.inksy.databinding.FragmentCreatejournalcoverBinding
 
 class CreateJournalCoverInfo : Fragment() {
 
-    private lateinit var cameraUri: Uri
+    lateinit var cameraUri: Uri
+    var photoSelect = false
     private lateinit var tvTitle: TextView
     private lateinit var tvContinue: TextView
     var numberPicker: NumberPicker? = null
     private lateinit var bottomSheetDialog: RoundedBottomSheetDialog
     lateinit var binding: FragmentCreatejournalcoverBinding
     private val PICK_REQUEST = 53
+    lateinit var tinydb: TinyDB
+    var selectedCategoyId: Int = 0
+    var categoriesList: ArrayList<Categories> = ArrayList()
+    lateinit var data: Array<String>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -43,16 +50,47 @@ class CreateJournalCoverInfo : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentCreatejournalcoverBinding.inflate(layoutInflater)
 
-        binding.subtext.setOnClickListener {
+        tinydb = TinyDB(requireContext())
+        var string = tinydb.getListString("categoriesList")
+
+        cameraUri = Uri.parse("asdasdasd")
+
+        data = arrayOf(
+            "a",
+            "a",
+            "a",
+            "a",
+            "a",
+            "a",
+            "a",
+            "a",
+            "a",
+            "a",
+            "a",
+            "a",
+            "a",
+            "a",
+            "a",
+            "a",
+            "a",
+            "a"
+        )
+
+        for (i in 0 until string.size) {
+            var gson = Gson()
+            var categories = gson.fromJson(string[i], Categories::class.java)
+            data[i] = categories.categoryName!!
+            categoriesList.add(categories)
+        }
+
+
+
+        binding.category.setOnClickListener {
             openRoundBottomSheet()
         }
 
         var tinyDB = TinyDB(requireContext())
         tinyDB.remove("jsondata")
-
-
-
-
 
 
         binding.ivBack.setOnClickListener {
@@ -62,9 +100,31 @@ class CreateJournalCoverInfo : Fragment() {
         }
 
         binding.checked.setOnClickListener {
-            val action =
-                CreateJournalCoverInfoDirections.actionCreateJournalCoverInfoToCreateJournalIndex()
-            findNavController().navigate(action)
+
+
+            Toast.makeText(requireContext(), "checked", Toast.LENGTH_SHORT).show()
+            if (selectedCategoyId == 0){
+                Toast.makeText(requireContext(), "Please select category", Toast.LENGTH_SHORT).show()
+            }else if(binding.title.text.isNullOrEmpty()) {
+                Toast.makeText(requireContext(), "Please enter title", Toast.LENGTH_SHORT).show()
+            }else if (binding.description.text.isNullOrEmpty()) {
+                Toast.makeText(requireContext(), "Please enter description", Toast.LENGTH_SHORT).show()
+            }else if (photoSelect){
+                Toast.makeText(requireContext(), "Please select coverphoto", Toast.LENGTH_SHORT).show()
+            }else {
+
+                var bundle = Bundle()
+                bundle.putInt("categoryId", selectedCategoyId)
+                bundle.putString("title", binding.title.text.toString())
+                bundle.putString("description", binding.description.text.toString())
+                bundle.putString("categoryName", binding.category.text.toString())
+                bundle.putString("uri", cameraUri.toString())
+
+                findNavController().navigate(
+                    R.id.action_CreateJournalCoverInfo_to_createJournalIndex,
+                    bundle
+                )
+            }
         }
 
         binding.audienceSetting.setOnClickListener {
@@ -94,20 +154,8 @@ class CreateJournalCoverInfo : Fragment() {
 
         tvTitle.text = getString(R.string.select_category)
 
-
-        val data = arrayOf(
-            "Health",
-            "Motivational",
-            "Spiritual",
-            "Tech",
-            "Mindfulness",
-            "Trending",
-            "Goals",
-            "Planning"
-        )
-
         numberPicker?.minValue = 0 //from array first value
-        numberPicker?.maxValue = data.size - 1 //to array last value
+        numberPicker?.maxValue = categoriesList.size - 1 //to array last value
 
         numberPicker?.displayedValues = data
         numberPicker?.wrapSelectorWheel = false
@@ -118,8 +166,8 @@ class CreateJournalCoverInfo : Fragment() {
 
         tvContinue.setOnClickListener(View.OnClickListener { view1: View? ->
 
-            binding.subtext.setText(data[numberPicker?.value!!])
-
+            binding.category.setText(categoriesList[numberPicker?.value!!].categoryName)
+            selectedCategoyId = categoriesList[numberPicker?.value!!].id!!
             bottomSheetDialog.dismiss()
         })
 
@@ -136,10 +184,28 @@ class CreateJournalCoverInfo : Fragment() {
                 cameraUri = data!!.data!!
 
                 val uri = data.data
+
                 val bitmap = MediaStore.Images.Media.getBitmap(
                     requireActivity().applicationContext.contentResolver,
                     uri
                 )
+
+                if (uri != null) {
+                    cameraUri = uri
+                }
+
+//                var file: File = File(cameraUri.path)
+//
+//                GlobalScope.launch {
+//
+//                    file = Compressor.compress(requireContext(), file) {
+//                        // your own extension
+//                        quality(80) // combine with compressor constraint
+//                        format(Bitmap.CompressFormat.JPEG)
+//                    }
+//
+//                    cameraUri = Uri.fromFile(file)
+//                }
 
                 Glide.with(requireContext()).load(cameraUri).into(binding.coverImage)
                 binding.coverImage.scaleType = ImageView.ScaleType.CENTER_CROP

@@ -178,18 +178,19 @@ public class FileUtil {
     }
 
     public static File from(Context context, Uri uri) throws IOException {
+        File tempFile = File.createTempFile("fasdas", "dasd");
+        try {
         InputStream inputStream = context.getContentResolver().openInputStream(uri);
         String fileName = getFileName(context, uri);
         String[] splitName = splitFileName(fileName);
-        File tempFile = File.createTempFile(splitName[0], splitName[1]);
-        tempFile = rename(tempFile, fileName);
+
+            tempFile = File.createTempFile(splitName[0], splitName[1]);
+            tempFile = rename(tempFile, fileName);
         tempFile.deleteOnExit();
         FileOutputStream out = null;
-        try {
+
             out = new FileOutputStream(tempFile);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+
         if (inputStream != null) {
             copy(inputStream, out);
             inputStream.close();
@@ -197,6 +198,9 @@ public class FileUtil {
 
         if (out != null) {
             out.close();
+        }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
         return tempFile;
     }

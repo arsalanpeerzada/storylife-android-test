@@ -228,7 +228,7 @@
             <!--        Share-->
 
             <ImageView
-                android:id="@+id/imageView12"
+                android:id="@+id/shareImg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_16sdp"
@@ -239,7 +239,7 @@
 
 
             <TextView
-                android:id="@+id/textView26"
+                android:id="@+id/sharetv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
@@ -248,11 +248,11 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageView12"
-                app:layout_constraintTop_toTopOf="@+id/imageView12" />
+                app:layout_constraintStart_toEndOf="@+id/shareImg"
+                app:layout_constraintTop_toTopOf="@+id/shareImg" />
 
             <TextView
-                android:id="@+id/textView18"
+                android:id="@+id/sharedesc"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
@@ -261,8 +261,8 @@
                 android:text="With friends and family members"
                 android:textSize="@dimen/_10sdp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageView12"
-                app:layout_constraintTop_toBottomOf="@+id/textView26" />
+                app:layout_constraintStart_toEndOf="@+id/shareImg"
+                app:layout_constraintTop_toBottomOf="@+id/sharetv" />
 
             <View
                 android:id="@+id/view10"
@@ -271,8 +271,8 @@
                 android:layout_marginTop="@dimen/_8sdp"
                 android:background="@color/line_grey"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textView18"
-                app:layout_constraintTop_toBottomOf="@+id/textView18" />
+                app:layout_constraintStart_toStartOf="@+id/sharedesc"
+                app:layout_constraintTop_toBottomOf="@+id/sharedesc" />
 
 
             <!--        Artist Panel-->
@@ -389,6 +389,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/view2" />
 
             <TextView
+                android:id="@+id/supportNumbe"
                 android:layout_marginBottom="@dimen/_35sdp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

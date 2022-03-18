@@ -1,13 +1,12 @@
 package com.inksy.Remote
 
 import com.example.example.DoodleData
+import com.example.example.DoodlePack
 import com.google.gson.JsonElement
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.inksy.Model.DashboardDataModel
-import com.inksy.Model.OthersModel
-import com.inksy.Model.PeopleListModel
-import com.inksy.Model.UserModel
+import com.inksy.Model.*
+import com.inksy.UI.Fragments.Journal
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -65,6 +64,24 @@ public interface APIInterface {
         @Header("Authorization") token: String?
     ): Call<ApiResponse<DoodleData>>
 
+    @GET("doodle/pack/pendings")
+    @Headers("Accept: application/json")
+    fun doodlePending(
+        @Header("Authorization") token: String?
+    ): Call<ApiResponse<List<DoodlePack>>>
+
+    @GET("doodle/pack/approved")
+    @Headers("Accept: application/json")
+    fun doodleApproved(
+        @Header("Authorization") token: String?
+    ): Call<ApiResponse<List<DoodlePack>>>
+
+
+    @POST("artist/make")
+    @Headers("Accept: application/json")
+    fun artistMake(
+        @Header("Authorization") token: String?
+    ): Call<ApiResponse<JsonElement>>
 
     @POST("user/block/{id}")
     @Headers("Accept: application/json")
@@ -120,6 +137,17 @@ public interface APIInterface {
         @Header("Authorization") token: String?
     ): Call<ApiResponse<List<PeopleListModel>>>
 
+
+
+
+
+    @Headers("Accept: application/json")
+    @GET("journal/search")
+    fun searchJournal(
+        @Query("title") s: String?,
+        @Header("Authorization") token: String?
+    ): Call<ApiResponse<List<Journals>>>
+
     @FormUrlEncoded
     @Headers("Accept: application/json")
     @POST("journal/like")
@@ -127,6 +155,39 @@ public interface APIInterface {
         @Field("journal_id") journal_Id: String?,
         @Header("Authorization") token: String?
     ): Call<ApiResponse<JsonElement>>
+
+    @GET("journal/details/{id}")
+    @Headers("Accept: application/json")
+    fun journalDetail(
+        @Path("id") id: Int,
+        @Header("Authorization") token: String?
+    ): Call<ApiResponse<Journals>>
+
+
+    @Multipart
+    @Headers("Accept: application/json")
+    @POST("journal/create")
+    fun journalCreate(
+        @Header("Authorization") token: String?,
+        @Part("cover_image\"; filename=\"myfile.jpg") coverImage : RequestBody,
+        @Part("category_id") category_id : RequestBody,
+        @Part("title") title : RequestBody?,
+        @Part("cover_bc") cover_bc : RequestBody?,
+        @Part("description") description : RequestBody?,
+        @Part("html_content") html_content : RequestBody?,
+        @Part("protection") protection : RequestBody?,
+        @Part("is_active") is_active : RequestBody?,
+    ): Call<ApiResponse<Journals>>
+
+
+    @FormUrlEncoded
+    @Headers("Accept: application/json")
+    @POST("journal/follow")
+    fun journalFollow(
+        @Field("journal_id") journal_Id: String?,
+        @Header("Authorization") token: String?
+    ): Call<ApiResponse<JsonElement>>
+
 
     @Headers("Accept: application/json")
     @POST("logout")

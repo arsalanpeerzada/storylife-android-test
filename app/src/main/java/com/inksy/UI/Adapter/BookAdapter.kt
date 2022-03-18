@@ -18,6 +18,7 @@ import com.inksy.Model.Journals
 import com.inksy.R
 import com.inksy.UI.Activities.ViewOnlyJournal
 import com.inksy.UI.Constants
+import com.inksy.Utils.TinyDB
 import com.varunest.sparkbutton.SparkButton
 import java.io.Serializable
 
@@ -36,9 +37,9 @@ class BookAdapter(
         lateinit var like: SparkButton
         lateinit var comment: ImageView
         lateinit var imgrecent: ImageView
-        lateinit var journalImage : ImageView
-        lateinit var journalTitle : TextView
-        lateinit var journalDesc : TextView
+        lateinit var journalImage: ImageView
+        lateinit var journalTitle: TextView
+        lateinit var journalDesc: TextView
 
         lateinit var tvrecent: TextView
         lateinit var like_counter: TextView
@@ -74,7 +75,8 @@ class BookAdapter(
 
         try {
             holder.bind()
-            Glide.with(context).load(Constants.BASE_THUMBNAIL+list[position].coverImage).into(holder.journalImage)
+            Glide.with(context).load(Constants.BASE_THUMBNAIL + list[position].coverImage)
+                .into(holder.journalImage)
             holder.journalTitle.text = list[position].title
             holder.journalDesc.text = list[position].description
 
@@ -83,16 +85,20 @@ class BookAdapter(
 
             when (list[position].coverBc) {
                 "blue" -> {
-                    holder.view.backgroundTintList = ContextCompat.getColorStateList(context,R.color.journalBlue);
+                    holder.view.backgroundTintList =
+                        ContextCompat.getColorStateList(context, R.color.journalBlue);
                 }
                 "green" -> {
-                    holder.view.backgroundTintList = ContextCompat.getColorStateList(context,R.color.journalGreen);
+                    holder.view.backgroundTintList =
+                        ContextCompat.getColorStateList(context, R.color.journalGreen);
                 }
                 "red" -> {
-                    holder.view.backgroundTintList = ContextCompat.getColorStateList(context,R.color.journalRed);
+                    holder.view.backgroundTintList =
+                        ContextCompat.getColorStateList(context, R.color.journalRed);
                 }
                 "purple" -> {
-                    holder.view.backgroundTintList = ContextCompat.getColorStateList(context,R.color.journalPurple);
+                    holder.view.backgroundTintList =
+                        ContextCompat.getColorStateList(context, R.color.journalPurple);
                 }
             }
 
@@ -100,7 +106,7 @@ class BookAdapter(
             Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show()
         }
 
-        if (position == 0){
+        if (position == 0) {
             holder.imgrecent.visibility = View.VISIBLE
             holder.tvrecent.visibility = View.VISIBLE
         }
@@ -109,13 +115,13 @@ class BookAdapter(
         holder.like.setOnClickListener {
 
             if (list[position].isJournalLike == 0) {
-               // holder.like_count++
+                // holder.like_count++
                 holder.like_counter.text = (list[position].likesCount?.plus(1)).toString()
                 list[position].likesCount = (list[position].likesCount?.plus(1))
                 list[position].isJournalLike = 1
                 onLikeJournalClickListener.onStateChange(position, true)
             } else if (list[position].isJournalLike == 1) {
-               // holder.like_count--
+                // holder.like_count--
                 holder.like_counter.text = (list[position].likesCount?.minus(1)).toString()
                 list[position].likesCount = (list[position].likesCount?.minus(1))
                 list[position].isJournalLike = 0
@@ -143,10 +149,19 @@ class BookAdapter(
         }
 
         holder.itemView.setOnClickListener {
+
+            var tinyDB = TinyDB(context)
+            var createdId = tinyDB.getString("id")
+
+            if (list[position].createdBy.toString() == createdId) {
+                type = Constants.person
+            }
+
+
             context.startActivity(
                 Intent(context, ViewOnlyJournal::class.java)
                     .putExtra(Constants.journalType, type)
-                    .putExtra("data",list[position] as Serializable)
+                    .putExtra("data", list[position] as Serializable)
             )
         }
     }

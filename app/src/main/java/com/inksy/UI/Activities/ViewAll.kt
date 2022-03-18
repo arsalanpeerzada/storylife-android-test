@@ -8,10 +8,13 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
 import com.inksy.Interfaces.OnChangeStateClickListener
 import com.inksy.Interfaces.iOnClickListerner
+import com.inksy.Model.Journals
 import com.inksy.Model.PeopleListModel
 import com.inksy.R
 import com.inksy.Remote.Status
@@ -32,13 +35,17 @@ class ViewAll : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListen
     lateinit var peopleView: PeopleView
     lateinit var binding: ActivityViewAllBinding
     var activity: String = ""
-    var mylist = ArrayList<PeopleListModel>()
+    var peoplelist = ArrayList<PeopleListModel>()
+    var journallist = ArrayList<Journals>()
     var token = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityViewAllBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.rvAll.visibility = View.VISIBLE
+        binding.layoutempty.visibility = View.GONE
 
         peopleView = ViewModelProvider(this)[PeopleView::class.java]
         peopleView.init()
@@ -48,10 +55,6 @@ class ViewAll : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListen
 
         activity = intent.getStringExtra(Constants.activity).toString()
         var dataCheck = intent.getBooleanExtra("Data", false)
-        if (dataCheck) {
-
-            mylist = intent.getSerializableExtra("List") as ArrayList<PeopleListModel>
-        }
         if (activity.contains("Search")) {
             binding.text.text = getString(R.string.search_result)
             binding.search.visibility = View.GONE
@@ -60,19 +63,41 @@ class ViewAll : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListen
             binding.search.visibility = View.VISIBLE
         }
 
-        var list = arrayOf(
-            R.drawable.red_book,
-            R.drawable.book_green,
-            R.drawable.book_blue,
-            R.drawable.red_book,
-            R.drawable.book_green,
-            R.drawable.book_blue,
-            R.drawable.red_book, R.drawable.book_green, R.drawable.book_blue,
-        )
+
+        if (dataCheck) {
+
+            if (activity.contains("Journal")) {
+                journallist = intent.getSerializableExtra("List") as ArrayList<Journals>
+                if (journallist.size == 0) {
+                    binding.rvAll.visibility = View.GONE
+                    binding.layoutempty.visibility = View.VISIBLE
+
+                    Glide.with(this)
+                        .load(ContextCompat.getDrawable(this, R.drawable.ic_empty_journal)).into(
+                            binding.emptyuser
+                        )
+                    binding.emptytv.text = "No Journal Found"
+
+                }
+            } else if (activity.contains("People")) {
+                peoplelist = intent.getSerializableExtra("List") as ArrayList<PeopleListModel>
+                if (peoplelist.size == 0) {
+                    binding.rvAll.visibility = View.GONE
+                    binding.layoutempty.visibility = View.VISIBLE
+                }
+            }
+
+        } else {
+//            binding.rvAll.visibility = View.GONE
+//            binding.layoutempty.visibility = View.VISIBLE
+        }
+
+
 
         if (activity.contains(Constants.sub_journalViewAll)) {
 
-            binding.rvAll.adapter = JournalAdapter(this@ViewAll, list, Constants.people, this)
+            binding.rvAll.adapter =
+                JournalAdapter(this@ViewAll, journallist, Constants.people, this)
         } else if (activity.contains(Constants.doodleViewAll)) {
 
 
@@ -81,34 +106,18 @@ class ViewAll : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListen
             binding.rvAll.adapter = DoodleAdapter(this@ViewAll)
         } else if (activity.contains(Constants.peopleSearch)) {
             binding.search.visibility = View.GONE
-//            var peoplelist = arrayOf(
-//                "Regina Lobo",
-//                "Jason Nicholas",
-//                "Emma Watson",
-//                "Lisa Messi",
-//                "Dane William",
-//                "Regina Lobo",
-//                )
+
             binding.rvAll.adapter =
-                PeopleAdapter(this@ViewAll, mylist as ArrayList<PeopleListModel>, true, this)
-        }  else if (activity.contains(Constants.peopleViewAll)) {
-            var peoplelist = arrayOf(
-                "Regina Lobo",
-                "Jason Nicholas",
-                "Emma Watson",
-                "Lisa Messi",
-                "Dane William",
-                "Regina Lobo",
+                PeopleAdapter(this@ViewAll, peoplelist as ArrayList<PeopleListModel>, true, this)
+        } else if (activity.contains(Constants.peopleViewAll)) {
 
-                )
-
-
-          //  binding.rvAll.adapter = PeopleAdapter(this@ViewAll, peoplelist)
-        } else if (activity.contains(Constants.sub_journalSearch)){
+            //  binding.rvAll.adapter = PeopleAdapter(this@ViewAll, peoplelist)
+        } else if (activity.contains(Constants.sub_journalSearch)) {
             binding.search.visibility = View.GONE
 
-            binding.rvAll.adapter = JournalAdapter(this@ViewAll, list,Constants.people,this)
-        }else if (activity.contains(Constants.doodleSearch)){
+            binding.rvAll.adapter =
+                JournalAdapter(this@ViewAll, journallist, Constants.people, this)
+        } else if (activity.contains(Constants.doodleSearch)) {
             binding.search.visibility = View.GONE
 
 
@@ -132,6 +141,11 @@ class ViewAll : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListen
 
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        //  startActivity(Intent(this@ViewAll, MainActivity::class.java))
+    }
+
     private fun performSearch() {
         binding.search.clearFocus()
         binding.search.text.clear()
@@ -145,10 +159,10 @@ class ViewAll : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListen
         super.onStateChange(position, like)
 
         if (like) {
-            var followList = mylist as ArrayList<PeopleListModel>
+            var followList = peoplelist as ArrayList<PeopleListModel>
             followUser(followList[position].id!!)
         } else {
-            var followList = mylist as ArrayList<PeopleListModel>
+            var followList = peoplelist as ArrayList<PeopleListModel>
             unfollowUser(followList[position].id!!)
         }
 

@@ -1,4 +1,4 @@
-package com.inksy.UI.Fragments
+package com.inksy.UI.Activities
 
 import android.app.Activity
 import android.content.Intent
@@ -12,10 +12,8 @@ import android.provider.MediaStore
 import android.text.Html
 import android.util.Base64
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -26,13 +24,10 @@ import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.setPadding
 import androidx.core.view.size
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.burhanrashid52.photoediting.*
-import com.burhanrashid52.photoediting.TextEditorDialogFragment.Companion.show
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.gson.Gson
 import com.inksy.Interfaces.OnDialogBulletClickListener
@@ -43,7 +38,6 @@ import com.inksy.Model.Styles
 import com.inksy.Model.TransformInfo
 import com.inksy.R
 import com.inksy.Remote.Status
-import com.inksy.UI.Activities.MainActivity
 import com.inksy.UI.Adapter.BulletAdapter
 import com.inksy.UI.Adapter.BulletSelectAdapter
 import com.inksy.UI.Constants
@@ -51,7 +45,7 @@ import com.inksy.UI.Dialogs.BulletDialog
 import com.inksy.UI.ViewModel.JournalView
 import com.inksy.Utils.FileUtil
 import com.inksy.Utils.TinyDB
-import com.inksy.databinding.FragmentCreateJournalIndexBinding
+import com.inksy.databinding.ActivityShowJournalBinding
 import io.github.hyuwah.draggableviewlib.DraggableView
 import ja.burhanrashid52.photoeditor.OnPhotoEditorListener
 import ja.burhanrashid52.photoeditor.PhotoEditor
@@ -67,13 +61,10 @@ import java.io.IOException
 import kotlin.math.max
 import kotlin.math.min
 
-
-class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
+class ShowJournal : AppCompatActivity(), iOnClickListerner, OnPhotoEditorListener,
     PropertiesBSFragment.Properties, ShapeBSFragment.Properties, EmojiBSFragment.EmojiListener,
     StickerBSFragment.StickerListener, OnDialogBulletClickListener, PopUpOnClickListerner,
     View.OnFocusChangeListener, View.OnClickListener, onMoveListener {
-
-
     lateinit var tinyDB: TinyDB
     lateinit var transinfo: TransformInfo
     var imageArray: JSONArray = JSONArray()
@@ -86,7 +77,6 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
     private var mShapeBSFragment: ShapeBSFragment? = null
     private var mShapeBuilder: ShapeBuilder? = null
     private val PICK_IMAGE_BACKGROUND = 2
-    lateinit var binding: FragmentCreateJournalIndexBinding
     private lateinit var cameraUri: Uri
 
     lateinit var mPhotoEditor: PhotoEditor
@@ -103,39 +93,21 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
     lateinit var bulletList: ArrayList<Styles>
 
     private var selectedFile: File? = null
+    lateinit var binding: ActivityShowJournalBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
+        binding = ActivityShowJournalBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        var jsonString = ""
+        if (intent.extras != null) {
+            jsonString = intent.getStringExtra("JSON").toString()
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        // Inflate the layout for this fragment
-        binding = FragmentCreateJournalIndexBinding.inflate(layoutInflater)
-
-        tinyDB = TinyDB(requireContext())
-        transinfo = TransformInfo(0f, 0f, 0f, 0f, 0f, 0f, 0f, 10f)
-
-
-            coverTitle = arguments?.get("title") as String
-            categoryId = arguments?.get("categoryId") as Int
-            coverDesciption = arguments?.get("description") as String
-            categoryname = arguments?.get("categoryName") as String
-            var cameraui = arguments?.get("uri") as String
-
-            cameraUri = Uri.parse(cameraui)
-
 
 
         bulletArray = JSONArray()
 
         init()
         initClickListener()
-
-        var jsonString = arguments?.getString("JSON")
 
         if (jsonString != null && jsonString != "") {
             var jsonObject = JSONObject(jsonString)
@@ -157,7 +129,6 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
                 var axixY = jsonObject.getString("axixY")
                 var layoutName = jsonObject.getString("layoutID")
                 val titleModel: Styles = gson.fromJson(title, Styles::class.java)
-                //var bullets = gson.fromJson(bulletList, Styles::class.java)
 
                 var index = bulletList.length()
 
@@ -219,7 +190,7 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
         mShapeBSFragment = ShapeBSFragment()
         mShapeBSFragment!!.setPropertiesChangeListener(this)
 
-        return binding.root
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -243,7 +214,7 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
 
 
         if (_typface != 0) {
-            val typeface = context?.resources?.getFont(_typface)
+            val typeface = resources?.getFont(_typface)
             styleBuilder.withTextFont(typeface!!)
         }
 
@@ -274,16 +245,16 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
         if (fragment == null || fragment.isAdded) {
             return
         }
-        fragment.show(childFragmentManager, fragment.tag)
+        fragment.show(supportFragmentManager, fragment.tag)
     }
 
     fun init() {
         val pinchTextScalable =
-            requireActivity().intent.getBooleanExtra(PINCH_TEXT_SCALABLE_INTENT_KEY, true)
+            this.intent.getBooleanExtra(PINCH_TEXT_SCALABLE_INTENT_KEY, true)
 
 
         //Typeface mEmojiTypeFace = Typeface.createFromAsset(getAssets(), "emojione-android.ttf");
-        mPhotoEditor = PhotoEditor.Builder(requireContext(), binding.photoEditorView)
+        mPhotoEditor = PhotoEditor.Builder(this, binding.photoEditorView)
             .setPinchTextScalable(pinchTextScalable) // set flag to make text scalable when pinch
             //.setDefaultTextTypeface(mTextRobotoTf)
             //.setDefaultEmojiTypeface(mEmojiTypeFace)
@@ -301,7 +272,7 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
                 R.drawable.numbers_list, R.drawable.alphabetic
             )
 
-            binding.itemList.adapter = BulletSelectAdapter(requireContext(), array, this)
+            binding.itemList.adapter = BulletSelectAdapter(this, array, this)
 
             if (binding.itemList.visibility == View.VISIBLE) {
                 binding.itemList.visibility = View.GONE
@@ -310,14 +281,13 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
             }
         }
         binding.ivBack.setOnClickListener {
-            val action =
-                CreateJournalIndexDirections.actionCreateJournalIndexToCreateJournalCoverInfo()
-            findNavController().navigate(action)
+            onBackPressed()
         }
         binding.checked.setOnClickListener {
 //            val action = CreateJournalIndexDirections.actionCreateJournalIndexToCreateJournalEntry()
 //            findNavController().navigate(action)
-            sendJson()
+//            sendJson()
+            onBackPressed()
 
         }
 
@@ -376,41 +346,41 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
 
     override fun onClick(v: View?) {
 
-        if (layoutDragActive == v?.tag) {
-            val layout = v as LinearLayout
-
-            llTestDraggable.disableDrag()
-            layoutDragActive = ""
-            var data = layout.background
-            layout.setBackgroundResource(R.color.transparent)
-
-        } else {
-            val layout = v as LinearLayout
-            layout.setBackgroundResource(R.drawable.border_layout_grey)
-
-            layoutDragActive = v.tag.toString()
-
-
-            llTestDraggable = DraggableView.Builder(layout)
-                .setStickyMode(DraggableView.Mode.NON_STICKY)
-                .build()
-        }
-
-
-        for (i in 0 until binding.texteditor.size) {
-
-            val layout = binding.texteditor.getChildAt(i)
-
-            if (layoutDragActive != layout.tag.toString()) {
-                layout.setBackgroundResource(R.color.transparent)
-
-
-            }
-        }
+//        if (layoutDragActive == v?.tag) {
+//            val layout = v as LinearLayout
+//
+//            llTestDraggable.disableDrag()
+//            layoutDragActive = ""
+//            var data = layout.background
+//            layout.setBackgroundResource(R.color.transparent)
+//
+//        } else {
+//            val layout = v as LinearLayout
+//            layout.setBackgroundResource(R.drawable.border_layout_grey)
+//
+//            layoutDragActive = v.tag.toString()
+//
+//
+//            llTestDraggable = DraggableView.Builder(layout)
+//                .setStickyMode(DraggableView.Mode.NON_STICKY)
+//                .build()
+//        }
+//
+//
+//        for (i in 0 until binding.texteditor.size) {
+//
+//            val layout = binding.texteditor.getChildAt(i)
+//
+//            if (layoutDragActive != layout.tag.toString()) {
+//                layout.setBackgroundResource(R.color.transparent)
+//
+//
+//            }
+//        }
     }
 
     private fun openPopUp(data: String, itemView: View, layoutType: String) {
-        val contextWrapper = ContextThemeWrapper(requireContext(), R.style.popupMenuStyle)
+        val contextWrapper = ContextThemeWrapper(this, R.style.popupMenuStyle)
         val popupMenu = PopupMenu(
             contextWrapper, itemView
         )
@@ -418,9 +388,9 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
         popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.link -> {
-                    val action =
-                        CreateJournalIndexDirections.actionCreateJournalIndexToCreateJournalEntry()
-                    findNavController().navigate(action)
+//                    val action =
+//                        CreateJournalIndexDirections.actionCreateJournalIndexToCreateJournalEntry()
+//                    findNavController().navigate(action)
                     return@OnMenuItemClickListener true
                 }
                 R.id.Edit -> {
@@ -473,12 +443,12 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
 
                 val uri = data.data
                 val bitmap = MediaStore.Images.Media.getBitmap(
-                    requireActivity().applicationContext.contentResolver,
+                    this.applicationContext.contentResolver,
                     uri
                 )
                 mPhotoEditor.addImage(bitmap, 0f, 0f, 0f, 0f, this)
 
-                val input = activity?.contentResolver?.openInputStream(cameraUri)
+                val input = contentResolver?.openInputStream(cameraUri)
                 val image = BitmapFactory.decodeStream(input, null, null)
 
                 // Encode image to base64 string
@@ -500,14 +470,14 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
 
                 val uri = data.data
                 val bitmap = MediaStore.Images.Media.getBitmap(
-                    requireActivity().applicationContext.contentResolver,
+                    this.applicationContext.contentResolver,
                     uri
                 )
                 binding.photoEditorView.source.setImageBitmap(bitmap)
 
 
             } else if (requestCode == CAMERA_REQUEST) {
-                val selectedFilePath: String = FileUtil.getPath(requireContext(), cameraUri)
+                val selectedFilePath: String = FileUtil.getPath(this, cameraUri)
                 val file = File(selectedFilePath)
                 val compressedImageFile: File? = null
                 try {
@@ -524,19 +494,19 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
 
 
     override fun onAddViewListener(viewType: ViewType?, numberOfAddedViews: Int) {
-        Toast.makeText(requireContext(), "View Added", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "View Added", Toast.LENGTH_SHORT).show()
     }
 
     override fun onRemoveViewListener(viewType: ViewType?, numberOfAddedViews: Int) {
-        Toast.makeText(requireContext(), "View Remove", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "View Remove", Toast.LENGTH_SHORT).show()
     }
 
     override fun onStartViewChangeListener(viewType: ViewType?) {
-        Toast.makeText(requireContext(), "View Change", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "View Change", Toast.LENGTH_SHORT).show()
     }
 
     override fun onStopViewChangeListener(viewType: ViewType?) {
-        Toast.makeText(requireContext(), "View Change Stop", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "View Change Stop", Toast.LENGTH_SHORT).show()
     }
 
     override fun onTouchSourceImage(event: MotionEvent?) {
@@ -599,7 +569,8 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
     }
 
     private fun onTextCreateMethod() {
-        val textEditorDialogFragment = show(requireActivity() as AppCompatActivity)
+        val textEditorDialogFragment =
+            TextEditorDialogFragment.show(this as AppCompatActivity)
         textEditorDialogFragment.setOnTextEditorListener(object :
             TextEditorDialogFragment.TextEditor {
 
@@ -624,7 +595,7 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
 
 
                 if (_typface != 0) {
-                    val typeface = context?.resources?.getFont(_typface)
+                    val typeface = resources?.getFont(_typface)
                     styleBuilder.withTextFont(typeface!!)
                 }
 
@@ -670,7 +641,7 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
 
     override fun onEditTextChangeListener(rootView: View?, text: String?, colorCode: Int) {
         val textEditorDialogFragment =
-            show(requireActivity() as AppCompatActivity, text!!, colorCode)
+            TextEditorDialogFragment.show(this as AppCompatActivity, text!!, colorCode)
         textEditorDialogFragment.setOnTextEditorListener(object :
             TextEditorDialogFragment.TextEditor {
 
@@ -688,7 +659,7 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
                 styleBuilder.withTextSize(30f)
 
                 if (_typface != 0) {
-                    val typeface = context?.resources?.getFont(_typface)
+                    val typeface = resources?.getFont(_typface)
                     styleBuilder.withTextFont(typeface!!)
                 }
                 if (isBold && isItalic) {
@@ -723,7 +694,7 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
         toFloat1: Float
     ) {
 
-        val linearLayout = LinearLayout(requireContext())
+        val linearLayout = LinearLayout(this)
         linearLayout.setPadding(40)
         var linearlayoutparams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -732,13 +703,18 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
         linearLayout.layoutParams = linearlayoutparams
         linearLayout.orientation = LinearLayout.VERTICAL
 
+        var x = toFloat
+        var y = toFloat1
+        linearLayout.x = x
+        linearLayout.y = y
+
         var rv = callbackrv
         if (callBacktv.data != "") {
 
             binding.texteditor.requestFocus()
 
-            val view = View(requireContext())
-            val textview = TextView(requireContext())
+            val view = View(this)
+            val textview = TextView(this)
             textview.layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -749,7 +725,7 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
             textview.setTextColor(callBacktv.textColor!!)
             textview.textSize = callBacktv.fontsize?.toFloat()!!
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                textview.typeface = requireContext().resources.getFont(callBacktv.typeface!!)
+                textview.typeface = this.resources.getFont(callBacktv.typeface!!)
             }
 
             view.layoutParams = LinearLayout.LayoutParams(
@@ -757,7 +733,7 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
                 20
             )
             if (callBacktv.textColor == 0) {
-                textview.setTextColor(requireContext().resources.getColor(R.color.black))
+                textview.setTextColor(this.resources.getColor(R.color.black))
             }
 
             linearLayout.addView(view)
@@ -775,13 +751,13 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
         if (callbackrv.size > 0) {
 
             bulletList = callbackrv
-            val recycler = RecyclerView(requireContext())
+            val recycler = RecyclerView(this)
             recycler.layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            recycler.layoutManager = LinearLayoutManager(requireContext())
-            recycler.adapter = BulletAdapter(requireContext(), callbackrv, type, fragmentName, this)
+            recycler.layoutManager = LinearLayoutManager(this)
+            recycler.adapter = BulletAdapter(this, callbackrv, type, fragmentName, this)
             linearLayout.addView(recycler)
 
         }
@@ -852,7 +828,7 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
             TYPE_BULLETS -> {
                 val checkBoxDiloag =
                     BulletDialog(
-                        requireContext(), getString(R.string.Done), getString(R.string.cancel),
+                        this, getString(R.string.Done), getString(R.string.cancel),
                         TYPE_BULLETS, this, fragmentName, styles, bulletList, layoutid
                     )
                 checkBoxDiloag.window!!.setBackgroundDrawableResource(android.R.color.transparent)
@@ -862,7 +838,7 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
             TYPE_CHECKBOX -> {
                 val checkBoxDiloag =
                     BulletDialog(
-                        requireContext(), getString(R.string.Done), getString(R.string.cancel),
+                        this, getString(R.string.Done), getString(R.string.cancel),
                         TYPE_CHECKBOX, this, fragmentName, styles, bulletList, layoutid
                     )
                 checkBoxDiloag.window!!.setBackgroundDrawableResource(android.R.color.transparent)
@@ -872,7 +848,7 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
             TYPE_NUMBERLIST -> {
                 val checkBoxDiloag =
                     BulletDialog(
-                        requireContext(), getString(R.string.Done), getString(R.string.cancel),
+                        this, getString(R.string.Done), getString(R.string.cancel),
                         TYPE_NUMBERLIST, this, fragmentName, styles, bulletList, layoutid
                     )
                 checkBoxDiloag.window!!.setBackgroundDrawableResource(android.R.color.transparent)
@@ -882,7 +858,7 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
             TYPE_ALPHALIST -> {
                 val checkBoxDiloag =
                     BulletDialog(
-                        requireContext(), getString(R.string.Done), getString(R.string.cancel),
+                        this, getString(R.string.Done), getString(R.string.cancel),
                         TYPE_ALPHALIST, this, fragmentName, styles, bulletList, layoutid
                     )
                 checkBoxDiloag.window!!.setBackgroundDrawableResource(android.R.color.transparent)
@@ -965,7 +941,7 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
 
         saveJournal(arraystring)
 
-//        var tinyDB = TinyDB(requireContext())
+//        var tinyDB = TinyDB(this)
 //        tinyDB.putString("jsondata", arraystring)
 //        openPopUp("Edit", binding.plus, "Edit")
     }
@@ -1035,11 +1011,11 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
     private fun saveJournal(arraystring: String) {
 
         lateinit var jouralView: JournalView
-        jouralView = ViewModelProvider(requireActivity())[JournalView::class.java]
+        jouralView = ViewModelProvider(this)[JournalView::class.java]
         jouralView.init()
 
 
-        var file: File = FileUtil.from(requireContext(), cameraUri)
+        var file: File = FileUtil.from(this, cameraUri)
 
         var token = tinyDB.getString("token")
         jouralView.journalCreate(
@@ -1052,11 +1028,9 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
             "0",
             "1",
             file
-        )?.observe(requireActivity()) {
+        )?.observe(this) {
             when (it.status) {
-                Status.SUCCESS -> {
-                    startActivity(Intent(requireContext(), MainActivity::class.java))
-                }
+                Status.SUCCESS -> {}
                 Status.ERROR -> {}
                 Status.LOADING -> {}
 

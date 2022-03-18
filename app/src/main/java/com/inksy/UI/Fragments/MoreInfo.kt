@@ -2,6 +2,7 @@ package com.inksy.UI.Fragments
 
 import android.R
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -56,9 +57,29 @@ class MoreInfo : Fragment() {
         binding.tvContactUsDesc.setOnClickListener { openNewActivity(Contact_Form::class.java) }
         binding.imgtvContactUs.setOnClickListener { openNewActivity(Contact_Form::class.java) }
 
+        binding.shareImg.setOnClickListener { share() }
+        binding.sharedesc.setOnClickListener { share() }
+        binding.sharetv.setOnClickListener { share() }
+
         binding.LogoutTitle.setOnClickListener { openDialog() }
         binding.logoutImg.setOnClickListener { openDialog() }
         binding.logoutSub.setOnClickListener { openDialog() }
+
+
+        binding.support.setOnClickListener {
+            val intent = Intent(Intent.ACTION_DIAL)
+            intent.data = Uri.parse("tel:+1 (917)725-4095")
+            startActivity(intent)
+        }
+        binding.supportNumbe.setOnClickListener {
+            val intent = Intent(Intent.ACTION_DIAL)
+            intent.data = Uri.parse("tel:+1 (917)725-4095")
+            startActivity(intent)
+        }
+
+
+
+
 
         return binding.root
 
@@ -66,6 +87,21 @@ class MoreInfo : Fragment() {
 
     private fun openNewActivity(clazz: Class<*>) {
         requireContext().startActivity(Intent(requireContext(), clazz))
+    }
+
+    fun share() {
+        val sendIntent = Intent()
+        sendIntent.action = Intent.ACTION_SEND
+//                sendIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.appshah.Helloletsgo");
+        //                sendIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.appshah.Helloletsgo");
+        sendIntent.putExtra(
+            Intent.EXTRA_TEXT,
+            "https://play.google.com/store/apps/details?id=" + requireContext().applicationContext
+                .packageName
+        )
+        sendIntent.type = "text/plain"
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
     }
 
 

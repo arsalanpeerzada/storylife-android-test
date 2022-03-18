@@ -90,9 +90,9 @@ class Login : Fragment() {
                                 tinydb.putString("bio", it?.data?.bio)
 
 
-                                if (it?.data?.avatar.isNullOrBlank()){
+                                if (it?.data?.avatar.isNullOrBlank()) {
 
-                                }else {
+                                } else {
                                     tinydb.putString("avatar", it?.data?.avatar)
                                 }
 
@@ -105,8 +105,15 @@ class Login : Fragment() {
                                 Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT)
                                     .show()
                             }
-                        }else {
+                        } else {
                             Toast.makeText(requireContext(), it?.message, Toast.LENGTH_SHORT).show()
+
+                            if (it?.message.toString() == "Your account is not activated."
+                                || it?.message.toString() == "Sorry! Phone number is not associated with this email address.") {
+                                var action: NavDirections =
+                                    LoginDirections.actionLoginToNumberVerify()
+                                findNavController().navigate(action)
+                            }
                         }
                     }
 

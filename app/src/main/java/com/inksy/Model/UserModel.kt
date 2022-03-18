@@ -1,5 +1,6 @@
 package com.inksy.Model
 
+import com.example.example.Pack
 import com.google.gson.annotations.SerializedName
 
 data class UserModel(
@@ -20,7 +21,8 @@ data class UserModel(
     @SerializedName("device_token") var deviceToken: String? = null,
     @SerializedName("is_private_profile") var isPrivateProfile: Int? = null,
     @SerializedName("is_profile_completed") var isProfileCompleted: Int? = null,
-    @SerializedName("journals") var journals: ArrayList<Journals>? = null
+    @SerializedName("journals") var journals: ArrayList<Journals>? = null,
+    @SerializedName("doodles") var doodles: ArrayList<Pack>? = null,
+    @SerializedName("followers") var followers: ArrayList<UserModel>? = null,
 
-
-)
+    )

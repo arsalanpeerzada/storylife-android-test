@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.inksy.Interfaces.iOnClickListerner
 import com.inksy.Model.PeopleListModel
 import com.inksy.Remote.Status
@@ -13,7 +14,7 @@ import com.inksy.UI.ViewModel.PeopleView
 import com.inksy.Utils.TinyDB
 import com.inksy.databinding.ActivityListBinding
 
-class List : AppCompatActivity(), iOnClickListerner {
+class List : AppCompatActivity(), iOnClickListerner, SwipeRefreshLayout.OnRefreshListener {
 
 
     lateinit var peopleView: PeopleView
@@ -21,6 +22,7 @@ class List : AppCompatActivity(), iOnClickListerner {
     var token = " "
     var list: ArrayList<PeopleListModel> = ArrayList()
     lateinit var adapter: BlockedUsersAdapter
+    lateinit var refreshLayout: SwipeRefreshLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityListBinding.inflate(layoutInflater)
@@ -31,16 +33,26 @@ class List : AppCompatActivity(), iOnClickListerner {
 
         token = TinyDB(this).getString("token").toString()
 
-        getData(token)
+        refreshLayout = binding.swipe
+
+        refreshLayout.setOnRefreshListener(this)
+        refreshLayout.post(Runnable {
+            refreshLayout.setRefreshing(true)
+
+            // Fetching data from server
+            getData(token)
+        })
     }
 
     private fun getData(_token: String) {
         peopleView.blockList(_token)?.observe(this) {
             when (it.status) {
                 Status.LOADING -> {}
-                Status.ERROR -> {}
+                Status.ERROR -> {
+                    refreshLayout.isRefreshing = false;
+                }
                 Status.SUCCESS -> {
-
+                    refreshLayout.isRefreshing = false;
                     list = it?.data?.data as ArrayList<PeopleListModel>
                     adapter = BlockedUsersAdapter(this, list, this)
                     binding.rvItemList.adapter = adapter
@@ -66,12 +78,20 @@ class List : AppCompatActivity(), iOnClickListerner {
                 Status.SUCCESS -> {
 
                     Toast.makeText(this, it.data?.message, Toast.LENGTH_SHORT).show()
-                    adapter.notifyItemRemoved(position)
+                    refresh()
                 }
                 Status.LOADING -> {
 
                 }
             }
         }
+    }
+
+    override fun onRefresh() {
+        refresh()
+    }
+
+    fun refresh() {
+        getData(token)
     }
 }

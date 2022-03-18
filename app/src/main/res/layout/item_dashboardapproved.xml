@@ -14,27 +14,32 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:scaleType="centerCrop"
+            android:id="@+id/Image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scaleType="centerCrop"
             android:src="@drawable/image" />
 
     </androidx.cardview.widget.CardView>
 
     <TextView
-        android:id="@+id/textView23"
-        android:layout_width="wrap_content"
+        android:id="@+id/packtitle"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginEnd="10dp"
+        android:ellipsize="end"
         android:fontFamily="@font/sfsemibold"
+        android:maxLines="1"
         android:text="Doodle Drawing"
         android:textColor="@color/black"
         android:textSize="@dimen/_10sdp"
+        app:layout_constraintEnd_toStartOf="@+id/salesCount"
         app:layout_constraintStart_toEndOf="@+id/cardView2"
         app:layout_constraintTop_toTopOf="@+id/cardView2" />
 
     <TextView
-        android:id="@+id/textView37"
+        android:id="@+id/packsize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -43,11 +48,11 @@
         android:textColor="@color/appBlue"
         android:textSize="@dimen/_8sdp"
         app:layout_constraintStart_toEndOf="@+id/cardView2"
-        app:layout_constraintTop_toBottomOf="@+id/textView23" />
+        app:layout_constraintTop_toBottomOf="@+id/packtitle" />
 
 
     <TextView
-        android:id="@+id/textView35"
+        android:id="@+id/amountCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/_16sdp"
@@ -55,9 +60,9 @@
         android:text="$12"
         android:textColor="@color/appBlue"
         android:textSize="@dimen/_9sdp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView23"
+        app:layout_constraintBottom_toBottomOf="@+id/packtitle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView23" />
+        app:layout_constraintTop_toTopOf="@+id/packtitle" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -66,13 +71,13 @@
         android:text="Amount"
         android:textColor="@color/black"
         android:textSize="@dimen/_8sdp"
-        app:layout_constraintEnd_toEndOf="@+id/textView35"
-        app:layout_constraintStart_toStartOf="@+id/textView35"
-        app:layout_constraintTop_toBottomOf="@+id/textView35" />
+        app:layout_constraintEnd_toEndOf="@+id/amountCount"
+        app:layout_constraintStart_toStartOf="@+id/amountCount"
+        app:layout_constraintTop_toBottomOf="@+id/amountCount" />
 
 
     <TextView
-        android:id="@+id/textView36"
+        android:id="@+id/salesCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/_32sdp"
@@ -80,9 +85,9 @@
         android:text="$12"
         android:textColor="@color/appBlue"
         android:textSize="@dimen/_9sdp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView23"
-        app:layout_constraintEnd_toStartOf="@+id/textView35"
-        app:layout_constraintTop_toTopOf="@+id/textView23" />
+        app:layout_constraintBottom_toBottomOf="@+id/packtitle"
+        app:layout_constraintEnd_toStartOf="@+id/amountCount"
+        app:layout_constraintTop_toTopOf="@+id/packtitle" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -91,9 +96,9 @@
         android:text="Sales"
         android:textColor="@color/black"
         android:textSize="@dimen/_8sdp"
-        app:layout_constraintEnd_toEndOf="@+id/textView36"
-        app:layout_constraintStart_toStartOf="@+id/textView36"
-        app:layout_constraintTop_toBottomOf="@+id/textView36" />
+        app:layout_constraintEnd_toEndOf="@+id/salesCount"
+        app:layout_constraintStart_toStartOf="@+id/salesCount"
+        app:layout_constraintTop_toBottomOf="@+id/salesCount" />
 
 
     <View

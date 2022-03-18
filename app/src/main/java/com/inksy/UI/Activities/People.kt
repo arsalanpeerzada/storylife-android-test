@@ -10,6 +10,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
+import com.example.example.Pack
 import com.inksy.Interfaces.OnChangeStateClickListener
 import com.inksy.Interfaces.OnDialogClickListener
 import com.inksy.Interfaces.iOnClickListerner
@@ -17,9 +18,10 @@ import com.inksy.Model.Journals
 import com.inksy.Model.PeopleListModel
 import com.inksy.R
 import com.inksy.Remote.Status
+import com.inksy.UI.Adapter.ArtworkAdapter
 import com.inksy.UI.Adapter.BookAdapter
 import com.inksy.UI.Constants
-import com.inksy.UI.Dialogs.ReportDialog
+import com.inksy.UI.Dialogs.Comment_BottomSheet
 import com.inksy.UI.Dialogs.TwoButtonDialog
 import com.inksy.UI.ViewModel.JournalView
 import com.inksy.UI.ViewModel.PeopleView
@@ -33,6 +35,7 @@ class People : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListene
     lateinit var binding: ActivityPeopleBinding
     lateinit var data: PeopleListModel
     var list: ArrayList<Journals>? = ArrayList()
+    var doodle_list: ArrayList<Pack> = ArrayList()
     var token: String = " "
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,15 +58,6 @@ class People : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListene
             binding.title.text = data.fullName.toString()
             binding.bio.text = data.bio.toString()
 
-//
-//            if (data.pivot?.followerId == accountUser) {
-//                Glide.with(this@People).load(ContextCompat.getDrawable(this, R.drawable.follow))
-//                    .centerCrop().into(binding.follow)
-//            } else {
-//
-//                Glide.with(this@People).load(ContextCompat.getDrawable(this, R.drawable.unfollowing))
-//                    .centerCrop().into(binding.follow)
-//            }
 
             getdetails(data.id!!, token)
             if (data.avatar != null)
@@ -143,6 +137,14 @@ class People : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListene
                 .into(binding.follow)
         }
 
+        binding.followedPeople.setOnClickListener() {
+            var intent = Intent(this, ViewAll::class.java).putExtra(
+                "activity",
+                Constants.peopleViewAll
+            )
+            startActivity(intent)
+        }
+
         binding.chat.setOnClickListener {
             startActivity(Intent(this, ChatActivity::class.java))
         }
@@ -174,6 +176,8 @@ class People : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListene
 
                     list = it.data?.data?.journals
 
+                    doodle_list = it.data?.data?.doodles!!
+
                     if (list?.size == 0) {
                         binding.textView3.visibility = View.GONE
                         binding.textView4.visibility = View.GONE
@@ -187,6 +191,9 @@ class People : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListene
 
                         binding.rvFriends.adapter =
                             BookAdapter(this, list!!, Constants.person, this, this)
+
+
+                        binding.rvDoodle.adapter = ArtworkAdapter(this, doodle_list, "Pack")
 
                     }
                 }
@@ -204,12 +211,13 @@ class People : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListene
         if (like) {
             likeJournal(list?.get(position)?.id, like)
         } else {
-
+            likeJournal(list?.get(position)?.id, like)
         }
     }
 
     override fun onclick(position: Int) {
         super.onclick(position)
+        Comment_BottomSheet().show(supportFragmentManager, " ");
     }
 
     private fun likeJournal(id: Int?, like: Boolean) {
@@ -222,10 +230,10 @@ class People : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListene
         )?.observe(this) {
 
             if (it?.data?.status == 1) {
-                Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, it?.data.message, Toast.LENGTH_SHORT).show()
 
             } else {
-                Toast.makeText(this, it?.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, it?.data?.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
