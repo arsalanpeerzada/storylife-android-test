@@ -12,14 +12,14 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.inksy.Interfaces.OnChangeStateClickListener
-import com.inksy.Model.PeopleListModel
+import com.inksy.Model.UserModel
 import com.inksy.R
 import com.inksy.UI.Activities.People
 import com.inksy.UI.Constants
 
 class PeopleAdapter(
     var context: Context,
-    var list: ArrayList<PeopleListModel>,
+    var list: ArrayList<UserModel>,
     var search: Boolean,
     var onChangeStateClickListener: OnChangeStateClickListener
 ) : RecyclerView.Adapter<PeopleAdapter.ViewHolder>() {

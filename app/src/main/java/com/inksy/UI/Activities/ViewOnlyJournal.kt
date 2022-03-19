@@ -145,7 +145,8 @@ class ViewOnlyJournal() : AppCompatActivity() {
                                 this@ViewOnlyJournal,
                                 this@ViewOnlyJournal,
                                 this@ViewOnlyJournal,
-                                journalData?.id!!.toString()
+                                journalData?.id!!.toString(),
+                                "journal"
                             ).show()
                         } else {
                             Toast.makeText(this, "Journal data is empty", Toast.LENGTH_SHORT).show()

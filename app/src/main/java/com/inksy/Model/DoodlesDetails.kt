@@ -1,6 +1,7 @@
 package com.example.example
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 
 data class DoodlesDetails (
@@ -13,4 +14,4 @@ data class DoodlesDetails (
   @SerializedName("created_at"     ) var createdAt    : String? = null,
   @SerializedName("updated_at"     ) var updatedAt    : String? = null
 
-)
+) : Serializable

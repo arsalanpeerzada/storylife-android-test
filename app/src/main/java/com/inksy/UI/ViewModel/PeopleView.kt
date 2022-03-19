@@ -16,7 +16,7 @@ class PeopleView : ViewModel() {
         null
     private var mutableLiveDataUser: MutableLiveData<Resource<APIInterface.ApiResponse<UserModel>>>? =
         null
-    private var mutableLiveDataPeople: MutableLiveData<Resource<APIInterface.ApiResponse<List<PeopleListModel>>>>? =
+    private var mutableLiveDataPeople: MutableLiveData<Resource<APIInterface.ApiResponse<List<UserModel>>>>? =
         null
     private var peopleRepo: PeopleRepo? = null
 
@@ -38,14 +38,41 @@ class PeopleView : ViewModel() {
 
     fun blockList(
         token: String
-    ): MutableLiveData<Resource<APIInterface.ApiResponse<List<PeopleListModel>>>>? {
+    ): MutableLiveData<Resource<APIInterface.ApiResponse<List<UserModel>>>>? {
         mutableLiveDataPeople = peopleRepo!!.getBlockList(token)
         return mutableLiveDataPeople
     }
 
+    fun forgotPassword(
+        email: String,
+        token: String?
+    ): MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>>? {
+        mutableLiveData = peopleRepo!!.forgotPassword(email, token)
+        return mutableLiveData
+    }
+
+    fun verifyCode(
+        code: String,
+        email: String,
+        token: String?
+    ): MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>>? {
+        mutableLiveData = peopleRepo!!.verifyCode(code, email, token)
+        return mutableLiveData
+    }
+
+    fun resetPassword(
+        password: String,
+        code: String,
+        email: String,
+        token: String?
+    ): MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>>? {
+        mutableLiveData = peopleRepo!!.resetPassword(password, code, email, token)
+        return mutableLiveData
+    }
+
     fun followRequests(
         token: String
-    ): MutableLiveData<Resource<APIInterface.ApiResponse<List<PeopleListModel>>>>? {
+    ): MutableLiveData<Resource<APIInterface.ApiResponse<List<UserModel>>>>? {
         mutableLiveDataPeople = peopleRepo!!.followRequests(token)
         return mutableLiveDataPeople
     }
@@ -80,6 +107,21 @@ class PeopleView : ViewModel() {
         token: String
     ): MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>>? {
         mutableLiveData = peopleRepo!!.unfollowUser(id, token)
+        return mutableLiveData
+    }
+
+    fun userReport(
+        user_Id: Int,
+        title: String,
+        description: String,
+        token: String,
+    ): MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>>? {
+        mutableLiveData = peopleRepo!!.userReport(
+            user_Id,
+            title,
+            description,
+            token!!
+        )
         return mutableLiveData
     }
 }

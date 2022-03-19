@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.inksy.Interfaces.OnChangeStateClickListener
 import com.inksy.Model.PeopleListModel
+import com.inksy.Model.UserModel
 import com.inksy.Remote.Status
 import com.inksy.UI.Adapter.PeopleDashboardAdapter
 import com.inksy.UI.ViewModel.DashboardView
@@ -23,7 +24,7 @@ class Sub_People : Fragment(), OnChangeStateClickListener,
     lateinit var binding: FragmentSubPeopleBinding
     lateinit var peopleView: PeopleView
     lateinit var tinyDB: TinyDB
-    lateinit var list: ArrayList<PeopleListModel>
+    lateinit var list: ArrayList<UserModel>
     var token = ""
     lateinit var dashboardView: DashboardView
     lateinit var refreshLayout: SwipeRefreshLayout

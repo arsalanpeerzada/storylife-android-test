@@ -40,7 +40,6 @@ class DashboardApproved : Fragment(), iOnClickListerner {
         token = tinydb.getString("token").toString()
         doodleView = ViewModelProvider(this)[DoodleView::class.java]
         doodleView.init()
-        binding.spinkit.visibility = View.GONE
         getData()
         _adapter = DashboardApprovedAdapter(requireContext(), doodleApprovedlist, this)
         binding.rvDashboardApproved.adapter = _adapter
@@ -50,7 +49,6 @@ class DashboardApproved : Fragment(), iOnClickListerner {
     }
 
     private fun getData() {
-        binding.spinkit.visibility = View.GONE
         doodleView.doodleApproved(token)?.observe(requireActivity()) {
             when (it.status) {
                 Status.SUCCESS -> {

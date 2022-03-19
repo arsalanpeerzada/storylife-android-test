@@ -13,7 +13,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.gson.Gson
 import com.inksy.Interfaces.OnChangeStateClickListener
 import com.inksy.Interfaces.iOnClickListerner
-import com.inksy.Model.Categories
 import com.inksy.Model.Journals
 import com.inksy.Remote.Status
 import com.inksy.UI.Activities.CreateActivity
@@ -26,6 +25,7 @@ import com.inksy.UI.ViewModel.DashboardView
 import com.inksy.UI.ViewModel.JournalView
 import com.inksy.Utils.TinyDB
 import com.inksy.databinding.FragmentSubJournalBinding
+import java.io.Serializable
 
 
 class Sub_Journal :
@@ -62,7 +62,8 @@ class Sub_Journal :
                 Intent(requireContext(), ViewAll::class.java).putExtra(
                     Constants.activity,
                     Constants.sub_journalViewAll
-                )
+                ).putExtra("Data", true)
+                    .putExtra("List", myjournals as Serializable)
             )
         }
         binding.seeall1.setOnClickListener {
@@ -70,7 +71,8 @@ class Sub_Journal :
                 Intent(requireContext(), ViewAll::class.java).putExtra(
                     Constants.activity,
                     Constants.sub_journalViewAll
-                )
+                ).putExtra("Data", true)
+                    .putExtra("List", otherJournals as Serializable)
             )
         }
         binding.seeall2.setOnClickListener {

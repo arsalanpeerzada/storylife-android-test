@@ -95,7 +95,7 @@ class Dashboard_Analytics : Fragment() {
         doodleView.artistDashboard(token)?.observe(requireActivity()) {
             when (it.status) {
                 Status.SUCCESS -> {
-                    var artistAnalytics = it?.data?.data
+                    var artistAnalytics = it?.data?.data?.analytics
 
                     var list_logo = arrayOf(
                         R.drawable.royalties_this_month,
@@ -121,16 +121,18 @@ class Dashboard_Analytics : Fragment() {
                         "Total Earned"
                     )
 
+                    var total = artistAnalytics?.totalPack!!
+
                     var value = intArrayOf(
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
+                        total,
+                        artistAnalytics?.approvedPack!!,
+                        artistAnalytics?.pendingPack!!,
+                        artistAnalytics?.totalSales!!,
+                        artistAnalytics?.todaySales!!,
+                        artistAnalytics?.monthlySales!!,
+                        artistAnalytics?.yealrySales!!,
+                        artistAnalytics?.totalReceived!!,
+                        artistAnalytics?.totalEarned!!,
 
                         )
 

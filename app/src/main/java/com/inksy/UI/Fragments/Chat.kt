@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.inksy.R
 import com.inksy.UI.Activities.ProfileActivity
 import com.inksy.UI.Adapter.ChatAdapter
 import com.inksy.UI.Constants
@@ -35,11 +36,13 @@ class Chat : Fragment() {
         binding = FragmentChatBinding.inflate(layoutInflater)
 
         var tinydb = TinyDB(requireContext())
-        var image = tinydb.getString("avatar")
 
-        if (!image.isNullOrEmpty())
-            Glide.with(requireContext()).load(Constants.BASE_IMAGE + image).into(binding.profile)
 
+        if (!tinydb.getString("avatar").isNullOrEmpty()) {
+            Glide.with(requireContext()).load(Constants.BASE_IMAGE + tinydb.getString("avatar"))
+                .placeholder(R.drawable.ic_empty_user)
+                .into(binding.profile)
+        }
         var list = arrayOf(
             "Regina Lobo",
             "Jason Nicholas",

@@ -6,6 +6,7 @@ import com.example.example.DoodleData
 import com.example.example.DoodlePack
 import com.google.gson.JsonElement
 import com.inksy.Model.Analytics
+import com.inksy.Model.AnalyticsData
 import com.inksy.Remote.APIInterface
 import com.inksy.Remote.Resource
 import com.inksy.UI.Repositories.DoodleRepo
@@ -18,7 +19,7 @@ class DoodleView : ViewModel() {
         null
     private var mutableLiveData: MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>>? =
         null
-    private var mutableLiveDataDashboard: MutableLiveData<Resource<APIInterface.ApiResponse<Analytics>>>? =
+    private var mutableLiveDataDashboard: MutableLiveData<Resource<APIInterface.ApiResponse<AnalyticsData>>>? =
         null
     private var doodleRepo: DoodleRepo? = null
 
@@ -44,9 +45,9 @@ class DoodleView : ViewModel() {
         return mutableLiveDoodlePack
     }
 
-    fun artistDashboard(token: String): MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>>? {
-        mutableLiveData = doodleRepo!!.artistDashboard(token)
-        return mutableLiveData
+    fun artistDashboard(token: String): MutableLiveData<Resource<APIInterface.ApiResponse<AnalyticsData>>>? {
+        mutableLiveDataDashboard = doodleRepo!!.artistDashboard(token)
+        return mutableLiveDataDashboard
     }
 
     fun createPack(

@@ -8,6 +8,6 @@ data class People (
   @SerializedName("id"        ) var id        : Int?                 = null,
   @SerializedName("full_name" ) var fullName  : String?              = null,
   @SerializedName("avatar"    ) var avatar    : String?              = null,
-  @SerializedName("followings" ) var followers : ArrayList<PeopleListModel> = arrayListOf()
+  @SerializedName("followings" ) var followers : ArrayList<UserModel> = arrayListOf()
 
 )

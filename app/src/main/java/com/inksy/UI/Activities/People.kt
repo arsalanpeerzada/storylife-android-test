@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
@@ -15,25 +16,28 @@ import com.inksy.Interfaces.OnChangeStateClickListener
 import com.inksy.Interfaces.OnDialogClickListener
 import com.inksy.Interfaces.iOnClickListerner
 import com.inksy.Model.Journals
-import com.inksy.Model.PeopleListModel
+import com.inksy.Model.UserModel
 import com.inksy.R
 import com.inksy.Remote.Status
 import com.inksy.UI.Adapter.ArtworkAdapter
 import com.inksy.UI.Adapter.BookAdapter
 import com.inksy.UI.Constants
 import com.inksy.UI.Dialogs.Comment_BottomSheet
+import com.inksy.UI.Dialogs.ReportDialog
 import com.inksy.UI.Dialogs.TwoButtonDialog
 import com.inksy.UI.ViewModel.JournalView
 import com.inksy.UI.ViewModel.PeopleView
 import com.inksy.Utils.TinyDB
 import com.inksy.databinding.ActivityPeopleBinding
 import com.inksy.databinding.TablayoutBinding
+import java.io.Serializable
 
 
 class People : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListener {
     lateinit var peopleView: PeopleView
     lateinit var binding: ActivityPeopleBinding
-    lateinit var data: PeopleListModel
+    lateinit var data: UserModel
+    var followersList: ArrayList<UserModel> = ArrayList()
     var list: ArrayList<Journals>? = ArrayList()
     var doodle_list: ArrayList<Pack> = ArrayList()
     var token: String = " "
@@ -43,8 +47,8 @@ class People : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListene
         binding = ActivityPeopleBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-        data = intent.getSerializableExtra("Data") as PeopleListModel
+        binding.loader.visibility = View.VISIBLE
+        data = intent.getSerializableExtra("Data") as UserModel
 
         peopleView = ViewModelProvider(this)[PeopleView::class.java]
         peopleView.init()
@@ -60,8 +64,10 @@ class People : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListene
 
 
             getdetails(data.id!!, token)
+
             if (data.avatar != null)
                 Glide.with(this).load(Constants.BASE_IMAGE + data.avatar)
+                    .placeholder(R.drawable.ic_empty_user)
                     .into(binding.circleImageView)
         }
 
@@ -113,6 +119,17 @@ class People : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListene
                     }
                     R.id.Report -> {
 
+                        if (data != null) {
+                            ReportDialog(
+                                this,
+                                this,
+                                this,
+                                this,
+                                data?.id!!.toString(),
+                                "user"
+                            ).show()
+                        }
+
                         return@OnMenuItemClickListener true
                     }
                     R.id.block -> {
@@ -141,7 +158,7 @@ class People : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListene
             var intent = Intent(this, ViewAll::class.java).putExtra(
                 "activity",
                 Constants.peopleViewAll
-            )
+            ).putExtra("List", followersList as Serializable).putExtra("Data", true)
             startActivity(intent)
         }
 
@@ -161,12 +178,19 @@ class People : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListene
 
     fun getdetails(id: Int, token: String) {
         peopleView.userDetail(id, token)?.observe(this) { it ->
+            binding.loader.visibility = View.GONE
             when (it.status) {
                 Status.ERROR -> {
 
                 }
                 Status.SUCCESS -> {
 //                    Toast.makeText(this, it.data?.data?.fullName, Toast.LENGTH_SHORT).show()
+
+                    if (it.data?.data?.isFollowed == 1) {
+                        binding.follow.background = ContextCompat.getDrawable(this,R.drawable.unfollowing)
+                    } else {
+                        binding.follow.setBackgroundResource(R.drawable.follow)
+                    }
 
                     binding.followedPeople.text =
                         "Followed by ${it.data?.data?.followerCount} People"
@@ -175,6 +199,7 @@ class People : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListene
 
 
                     list = it.data?.data?.journals
+                    followersList = it.data?.data?.followers!!
 
                     doodle_list = it.data?.data?.doodles!!
 

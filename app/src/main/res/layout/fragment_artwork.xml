@@ -9,6 +9,30 @@
         android:layout_height="match_parent"
         tools:context=".UI.Fragments.Journal">
 
+
+        <RelativeLayout
+            android:id="@+id/loader"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/fullblackpattihigh"
+            android:elevation="10dp"
+            android:visibility="gone">
+
+            <com.github.ybq.android.spinkit.SpinKitView
+                android:id="@+id/spin_kit"
+                style="@style/SpinKitView.Large.Circle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                app:SpinKit_Color="@color/appBlue"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </RelativeLayout>
+
         <TextView
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
@@ -142,6 +166,7 @@
                         android:text="@string/best_sellers"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_16sdp"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/rv_featured" />
 
@@ -152,6 +177,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="@dimen/_5sdp"
                         android:background="@color/line_grey2"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="@+id/seeall1"
                         app:layout_constraintStart_toStartOf="@+id/textView6"
                         app:layout_constraintTop_toBottomOf="@+id/textView6" />
@@ -166,6 +192,7 @@
                         android:text="See All"
                         android:textColor="@color/appBlue"
                         android:textSize="@dimen/_8sdp"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="@+id/textView6"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/textView6" />
@@ -178,6 +205,7 @@
                         android:layout_marginTop="@dimen/_16sdp"
                         android:layout_marginBottom="@dimen/_32sdp"
                         android:orientation="horizontal"
+                        android:visibility="gone"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="@+id/seeall2"

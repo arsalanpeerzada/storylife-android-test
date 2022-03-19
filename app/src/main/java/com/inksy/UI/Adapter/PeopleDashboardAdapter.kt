@@ -14,13 +14,15 @@ import com.bumptech.glide.Glide
 import com.inksy.Interfaces.OnChangeStateClickListener
 import com.inksy.Model.Followers
 import com.inksy.Model.PeopleListModel
+import com.inksy.Model.UserModel
 import com.inksy.R
 import com.inksy.UI.Activities.People
 import com.inksy.UI.Constants
+import java.io.Serializable
 
 class PeopleDashboardAdapter(
     var context: Context,
-    var list: ArrayList<PeopleListModel>,
+    var list: ArrayList<UserModel>,
     var search: Boolean,
     var onChangeStateClickListener: OnChangeStateClickListener
 ) : RecyclerView.Adapter<PeopleDashboardAdapter.ViewHolder>() {
@@ -97,7 +99,7 @@ class PeopleDashboardAdapter(
             context.startActivity(
                 Intent(context, People::class.java).putExtra(
                     "Data",
-                    data
+                    data as Serializable
                 )
             )
         }

@@ -1,6 +1,7 @@
 package com.example.example
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 
 data class Pack(
@@ -18,4 +19,4 @@ data class Pack(
     @SerializedName("updated_at") var updatedAt: String? = null,
     @SerializedName("doodles") var doodles: ArrayList<DoodlesDetails> = arrayListOf()
 
-)
+):Serializable

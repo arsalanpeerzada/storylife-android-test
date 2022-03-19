@@ -24,6 +24,17 @@ public interface APIInterface {
         @Field("phone_code") code: String?
     ): Call<ApiResponse<UserModel>>
 
+    @FormUrlEncoded
+    @POST("login")
+    @Headers("Accept: application/json")
+    fun loginRegister(
+        @Field("email") email: String?,
+        @Field("password") password: String?,
+        @Field("phone") mobile: String?,
+        @Field("phone_code") code: String?,
+        @Field("token") tokencode: String?
+    ): Call<ApiResponse<UserModel>>
+
     @Multipart
     @POST("user/profile")
     @Headers("Accept: application/json")
@@ -46,7 +57,7 @@ public interface APIInterface {
     @Headers("Accept: application/json")
     fun blockList(
         @Header("Authorization") token: String?
-    ): Call<ApiResponse<List<PeopleListModel>>>
+    ): Call<ApiResponse<List<UserModel>>>
 
 
     @GET("user/profile/{id}")
@@ -60,7 +71,7 @@ public interface APIInterface {
     @Headers("Accept: application/json")
     fun followRequests(
         @Header("Authorization") token: String?
-    ): Call<ApiResponse<List<PeopleListModel>>>
+    ): Call<ApiResponse<List<UserModel>>>
 
 
     @GET("doodle/shop")
@@ -85,7 +96,7 @@ public interface APIInterface {
     @Headers("Accept: application/json")
     fun artistDashboard(
         @Header("Authorization") token: String?
-    ): Call<ApiResponse<JsonElement>>
+    ): Call<ApiResponse<AnalyticsData>>
 
     @Multipart
     @POST("doodle/pack/create")
@@ -115,6 +126,16 @@ public interface APIInterface {
     @Headers("Accept: application/json")
     fun userUnblock(
         @Path("id") id: Int,
+        @Header("Authorization") token: String?
+    ): Call<ApiResponse<JsonElement>>
+
+    @FormUrlEncoded
+    @POST("user/report")
+    @Headers("Accept: application/json")
+    fun userReport(
+        @Field("user_id") user_id: Int,
+        @Field("title") title: String,
+        @Field("description") description: String,
         @Header("Authorization") token: String?
     ): Call<ApiResponse<JsonElement>>
 
@@ -242,6 +263,33 @@ public interface APIInterface {
         @Field("old_password") old_password: String?,
         @Field("password") password: String?,
         @Field("password_confirmation") password_confirmation: String?,
+        @Field("email") email: String?,
+        @Header("Authorization") token: String?
+    ): Call<ApiResponse<JsonElement>>
+
+    @FormUrlEncoded
+    @Headers("Accept: application/json")
+    @POST("reset-password")
+    fun resetPassword(
+        @Field("password") password: String?,
+        @Field("token") code: String?,
+        @Field("email") email: String?,
+        @Header("Authorization") token: String?
+    ): Call<ApiResponse<JsonElement>>
+
+    @FormUrlEncoded
+    @Headers("Accept: application/json")
+    @POST("forgot-password")
+    fun forgotPassword(
+        @Field("email") email: String?,
+        @Header("Authorization") token: String?
+    ): Call<ApiResponse<JsonElement>>
+
+    @FormUrlEncoded
+    @Headers("Accept: application/json")
+    @POST("verify-code")
+    fun verifyCode(
+        @Field("token") code: String?,
         @Field("email") email: String?,
         @Header("Authorization") token: String?
     ): Call<ApiResponse<JsonElement>>

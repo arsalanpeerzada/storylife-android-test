@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
+import com.bumptech.glide.Glide
 import com.inksy.Model.Categories
 import com.inksy.Model.Journals
 import com.inksy.Model.People
@@ -56,6 +57,13 @@ class Journal : Fragment() {
         dashboardView.init()
         tinyDB = TinyDB(requireContext())
 
+        if (!tinyDB.getString("avatar").isNullOrEmpty()) {
+            Glide.with(requireContext()).load(Constants.BASE_IMAGE + tinyDB.getString("avatar"))
+                .placeholder(R.drawable.ic_empty_user)
+                .into(binding.profile)
+        }else {
+
+        }
 
         Handler().postDelayed({
             binding.loader.visibility = View.GONE

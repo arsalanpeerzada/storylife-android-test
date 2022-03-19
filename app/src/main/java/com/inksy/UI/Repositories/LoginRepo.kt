@@ -9,6 +9,7 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 
 class LoginRepo {
@@ -54,10 +55,40 @@ class LoginRepo {
         return login
     }
 
+    fun loginRegister(
+        email: String?,
+        password: String?,
+        mobile: String?,
+        code: String?,
+        tokenCode : String
+    ): MutableLiveData<APIInterface.ApiResponse<UserModel>> {
+        val login: MutableLiveData<APIInterface.ApiResponse<UserModel>> =
+            MutableLiveData<APIInterface.ApiResponse<UserModel>>()
+        apiInterface.loginRegister(email, password, mobile, code,tokenCode)
+            .enqueue(object : Callback<APIInterface.ApiResponse<UserModel>> {
+                override fun onResponse(
+                    call: Call<APIInterface.ApiResponse<UserModel>?>?,
+                    response: Response<APIInterface.ApiResponse<UserModel>>
+                ) {
+                    if (response.isSuccessful) {
+                        login.value = response.body()
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<APIInterface.ApiResponse<UserModel>>,
+                    t: Throwable?
+                ) {
+
+                }
+            })
+        return login
+    }
+
     fun userprofile(
         _fullname: String?,
         _bio: String?,
-        _avatar: String,
+        _avatar: File,
         _token: String,
     ): MutableLiveData<APIInterface.ApiResponse<UserModel>> {
         val login: MutableLiveData<APIInterface.ApiResponse<UserModel>> =

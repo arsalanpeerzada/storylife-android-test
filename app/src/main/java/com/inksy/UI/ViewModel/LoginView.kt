@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.inksy.Model.UserModel
 import com.inksy.Remote.APIInterface
 import com.inksy.UI.Repositories.LoginRepo
+import java.io.File
 
 
 class LoginView : ViewModel() {
@@ -30,10 +31,21 @@ class LoginView : ViewModel() {
         return mutableLiveData
     }
 
+    fun loginRegister(
+        email: String,
+        password: String,
+        mobilenumber: String,
+        code: String,
+        tokenCode : String,
+    ): LiveData<APIInterface.ApiResponse<UserModel>?>? {
+        mutableLiveData = loginRepo!!.loginRegister(email, password, mobilenumber, code,tokenCode)
+        return mutableLiveData
+    }
+
     fun profile(
         fullname: String,
         bio: String,
-        avatar: String,
+        avatar: File,
         token: String
     ): LiveData<APIInterface.ApiResponse<UserModel>?>? {
         mutableLiveData = loginRepo!!.userprofile(fullname, bio, avatar, token)

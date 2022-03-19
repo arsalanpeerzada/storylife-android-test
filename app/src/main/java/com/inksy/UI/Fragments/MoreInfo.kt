@@ -38,10 +38,18 @@ class MoreInfo : Fragment() {
         binding = FragmentMoreInfoBinding.inflate(layoutInflater)
 
         binding.tvDoodle.setOnClickListener() {
-            openNewActivity(DoodleStore::class.java)
+
+            Toast.makeText(requireContext(), "Feature coming soon", Toast.LENGTH_SHORT).show()
+            //openNewActivity(DoodleStore::class.java)
         }
-        binding.imageDooble.setOnClickListener { openNewActivity(DoodleStore::class.java) }
-        binding.tvDescDoodle.setOnClickListener { openNewActivity(DoodleStore::class.java) }
+        binding.imageDooble.setOnClickListener {
+            Toast.makeText(requireContext(), "Feature coming soon", Toast.LENGTH_SHORT).show()
+            // openNewActivity(DoodleStore::class.java) }
+        }
+        binding.tvDescDoodle.setOnClickListener {
+            Toast.makeText(requireContext(), "Feature coming soon", Toast.LENGTH_SHORT).show()
+            //  openNewActivity(DoodleStore::class.java)
+        }
 
         binding.tvimgBlockList.setOnClickListener { openNewActivity(List::class.java) }
         binding.imgBlockList.setOnClickListener { openNewActivity(List::class.java) }
@@ -153,7 +161,7 @@ class MoreInfo : Fragment() {
 
 
     fun logout() {
-
+        binding.spinKit.visibility = View.VISIBLE
 
         var token = tinyDB.getString("token")
 
@@ -161,6 +169,7 @@ class MoreInfo : Fragment() {
         logoutView.init()
         logoutView.logout(token)?.observe(requireActivity()) {
 
+            binding.spinKit.visibility = View.GONE
             if (it?.status == 1) {
 
                 tinyDB.clear()

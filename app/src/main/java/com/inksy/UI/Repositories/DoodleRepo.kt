@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.example.DoodleData
 import com.example.example.DoodlePack
 import com.google.gson.JsonElement
+import com.inksy.Model.AnalyticsData
 import com.inksy.Remote.APIClient
 import com.inksy.Remote.APIInterface
 import com.inksy.Remote.Resource
@@ -165,19 +166,19 @@ class DoodleRepo {
 
     fun artistDashboard(
         token: String
-    ): MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>> {
-        val data: MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>> =
-            MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>>()
+    ): MutableLiveData<Resource<APIInterface.ApiResponse<AnalyticsData>>> {
+        val data: MutableLiveData<Resource<APIInterface.ApiResponse<AnalyticsData>>> =
+            MutableLiveData<Resource<APIInterface.ApiResponse<AnalyticsData>>>()
 
         val mytoken = "Bearer $token"
         apiInterface.artistDashboard(mytoken)
-            .enqueue(object : Callback<APIInterface.ApiResponse<JsonElement>> {
+            .enqueue(object : Callback<APIInterface.ApiResponse<AnalyticsData>> {
                 override fun onResponse(
-                    call: Call<APIInterface.ApiResponse<JsonElement>?>?,
-                    response: Response<APIInterface.ApiResponse<JsonElement>>
+                    call: Call<APIInterface.ApiResponse<AnalyticsData>?>?,
+                    response: Response<APIInterface.ApiResponse<AnalyticsData>>
                 ) {
                     if (response.body() != null) {
-                        val body: APIInterface.ApiResponse<JsonElement> = response.body()!!
+                        val body: APIInterface.ApiResponse<AnalyticsData> = response.body()!!
 
                         data.value = Resource.success(body)
 
@@ -195,7 +196,7 @@ class DoodleRepo {
                 }
 
                 override fun onFailure(
-                    call: Call<APIInterface.ApiResponse<JsonElement>>,
+                    call: Call<APIInterface.ApiResponse<AnalyticsData>>,
                     t: Throwable?
                 ) {
                     var dataa = t?.message.toString()

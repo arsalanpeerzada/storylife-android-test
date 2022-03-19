@@ -120,13 +120,13 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
         transinfo = TransformInfo(0f, 0f, 0f, 0f, 0f, 0f, 0f, 10f)
 
 
-            coverTitle = arguments?.get("title") as String
-            categoryId = arguments?.get("categoryId") as Int
-            coverDesciption = arguments?.get("description") as String
-            categoryname = arguments?.get("categoryName") as String
-            var cameraui = arguments?.get("uri") as String
+        coverTitle = arguments?.get("title") as String
+        categoryId = arguments?.get("categoryId") as Int
+        coverDesciption = arguments?.get("description") as String
+        categoryname = arguments?.get("categoryName") as String
+        var cameraui = arguments?.get("uri") as String
 
-            cameraUri = Uri.parse(cameraui)
+        cameraUri = Uri.parse(cameraui)
 
 
 
@@ -894,6 +894,7 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
     }
 
     private fun sendJson() {
+        binding.loader.visibility = View.VISIBLE
         val layout = binding.texteditor
         val child = layout.childCount
         val editor = binding.photoEditorView
@@ -1053,9 +1054,12 @@ class CreateJournalIndex : Fragment(), iOnClickListerner, OnPhotoEditorListener,
             "1",
             file
         )?.observe(requireActivity()) {
+            binding.loader.visibility = View.VISIBLE
             when (it.status) {
+
                 Status.SUCCESS -> {
                     startActivity(Intent(requireContext(), MainActivity::class.java))
+
                 }
                 Status.ERROR -> {}
                 Status.LOADING -> {}

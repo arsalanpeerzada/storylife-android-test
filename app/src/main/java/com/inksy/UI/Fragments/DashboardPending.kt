@@ -48,7 +48,7 @@ class DashboardPending : Fragment(), iOnClickListerner {
         doodleView = ViewModelProvider(this)[DoodleView::class.java]
         doodleView.init()
 
-        binding.spinkit.visibility = View.GONE
+
         getData()
         object : SwipeHelper(requireContext(), binding.rvDashboardApproved, false) {
 
@@ -84,7 +84,6 @@ class DashboardPending : Fragment(), iOnClickListerner {
     }
 
     private fun getData() {
-        binding.spinkit.visibility = View.GONE
         doodleView.doodlePending(token)?.observe(requireActivity()) {
             when (it.status) {
                 Status.SUCCESS -> {

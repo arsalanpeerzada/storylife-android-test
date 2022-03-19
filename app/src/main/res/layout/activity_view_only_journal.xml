@@ -12,7 +12,7 @@
             android:id="@+id/loader"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/fullblackpatti"
+            android:background="@color/fullblackpattihigh"
             android:elevation="10dp">
 
             <com.github.ybq.android.spinkit.SpinKitView
@@ -32,6 +32,7 @@
 
 
         <ImageView
+            android:background="@color/fullblackpatti"
             android:id="@+id/ivBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,6 +46,7 @@
 
 
         <ImageView
+            android:background="@color/fullblackpatti"
             android:id="@+id/more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -78,7 +80,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="310dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/image"
+                    android:src="@drawable/whiteimage"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

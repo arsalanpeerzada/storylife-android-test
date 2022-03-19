@@ -16,6 +16,7 @@ import com.inksy.Interfaces.OnChangeStateClickListener
 import com.inksy.Interfaces.iOnClickListerner
 import com.inksy.Model.Journals
 import com.inksy.Model.PeopleListModel
+import com.inksy.Model.UserModel
 import com.inksy.R
 import com.inksy.Remote.Status
 import com.inksy.UI.Adapter.DoodleAdapter
@@ -35,7 +36,7 @@ class ViewAll : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListen
     lateinit var peopleView: PeopleView
     lateinit var binding: ActivityViewAllBinding
     var activity: String = ""
-    var peoplelist = ArrayList<PeopleListModel>()
+    var peoplelist = ArrayList<UserModel>()
     var journallist = ArrayList<Journals>()
     var token = ""
 
@@ -80,19 +81,17 @@ class ViewAll : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListen
 
                 }
             } else if (activity.contains("People")) {
-                peoplelist = intent.getSerializableExtra("List") as ArrayList<PeopleListModel>
+                peoplelist = intent.getSerializableExtra("List") as ArrayList<UserModel>
                 if (peoplelist.size == 0) {
                     binding.rvAll.visibility = View.GONE
                     binding.layoutempty.visibility = View.VISIBLE
                 }
+            }else {
+
             }
 
         } else {
-//            binding.rvAll.visibility = View.GONE
-//            binding.layoutempty.visibility = View.VISIBLE
         }
-
-
 
         if (activity.contains(Constants.sub_journalViewAll)) {
 
@@ -108,10 +107,10 @@ class ViewAll : AppCompatActivity(), iOnClickListerner, OnChangeStateClickListen
             binding.search.visibility = View.GONE
 
             binding.rvAll.adapter =
-                PeopleAdapter(this@ViewAll, peoplelist as ArrayList<PeopleListModel>, true, this)
+                PeopleAdapter(this@ViewAll, peoplelist as ArrayList<UserModel>, true, this)
         } else if (activity.contains(Constants.peopleViewAll)) {
 
-            //  binding.rvAll.adapter = PeopleAdapter(this@ViewAll, peoplelist)
+            binding.rvAll.adapter = PeopleAdapter(this@ViewAll, peoplelist, false, this)
         } else if (activity.contains(Constants.sub_journalSearch)) {
             binding.search.visibility = View.GONE
 

@@ -19,13 +19,15 @@ import androidx.lifecycle.ViewModelStoreOwner
 import com.inksy.R
 import com.inksy.Remote.Status
 import com.inksy.UI.ViewModel.JournalView
+import com.inksy.UI.ViewModel.PeopleView
 import com.inksy.Utils.AppUtils
 import com.inksy.Utils.TinyDB
 
 class ReportDialog(
     var vm: ViewModelStoreOwner,
     var lco: LifecycleOwner,
-    context: Context, var _activity: Activity, var journal_id: String
+    context: Context, var _activity: Activity, var id: String,
+    var type: String
 ) : Dialog(context), View.OnClickListener {
 
     lateinit var tvCancel: TextView
@@ -35,6 +37,8 @@ class ReportDialog(
     private lateinit var edtdesc: EditText
     private lateinit var edtTitle: EditText
     lateinit var journalView: JournalView
+    lateinit var peopleView: PeopleView
+    lateinit var dialogTitle: TextView
     lateinit var tiny: TinyDB
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,10 +52,15 @@ class ReportDialog(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.WRAP_CONTENT
         )
-        initUI()
+        if (type == "journal") {
+            initUiJournal()
+        } else {
+            initUiJoUser()
+        }
+
     }
 
-    private fun initUI() {
+    private fun initUiJournal() {
         journalView = ViewModelProvider(vm)[JournalView::class.java]
         journalView.init()
         tiny = TinyDB(context)
@@ -62,6 +71,49 @@ class ReportDialog(
         edtdesc = findViewById(R.id.edtdesc)
         tvCancel.setOnClickListener(this)
         tvOk.setOnClickListener(this)
+        edtdesc.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun afterTextChanged(editable: Editable) {
+                if (edtdesc.getText().toString().length > 0) {
+                    val letter: String = edtdesc.getText().toString().get(0).toString()
+                    val letterUpperCaee = letter.toUpperCase()
+                    if (letter != letterUpperCaee) {
+                        edtdesc.setText(capitaliseOnlyFirstLetter(edtdesc.getText().toString()))
+                        edtdesc.setSelection(edtdesc.getText().toString().length)
+                    }
+                }
+            }
+        })
+        edtTitle.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun afterTextChanged(editable: Editable) {
+                if (edtTitle.getText().toString().length > 0) {
+                    val letter: String = edtTitle.getText().toString().get(0).toString()
+                    val letterUpperCaee = letter.toUpperCase()
+                    if (letter != letterUpperCaee) {
+                        edtTitle.setText(capitaliseOnlyFirstLetter(edtTitle.getText().toString()))
+                        edtTitle.setSelection(edtTitle.getText().toString().length)
+                    }
+                }
+            }
+        })
+    }
+
+    private fun initUiJoUser() {
+        peopleView = ViewModelProvider(vm)[PeopleView::class.java]
+        peopleView.init()
+        tiny = TinyDB(context)
+        dialogTitle = findViewById(R.id.tvAddAccount)
+        Okprogress = findViewById(R.id.Okprogress)
+        tvCancel = findViewById(R.id.tvCancel)
+        tvOk = findViewById(R.id.tvOk)
+        edtTitle = findViewById(R.id.edtTitle)
+        edtdesc = findViewById(R.id.edtdesc)
+        tvCancel.setOnClickListener(this)
+        tvOk.setOnClickListener(this)
+        dialogTitle.text = "Report User"
         edtdesc.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
@@ -112,14 +164,34 @@ class ReportDialog(
                 edtdesc.isEnabled = false
                 Okprogress.visibility = View.VISIBLE
                 tvOk.visibility = View.GONE
-                reportEvent(journal_id, edtTitle.text.toString(), edtdesc.text.toString())
+                if (type == " journal")
+                    reportJournal(id, edtTitle.text.toString(), edtdesc.text.toString())
+                else {
+                    reportUser(id, edtTitle.text.toString(), edtdesc.text.toString())
+                }
             }
         }
     }
 
-    private fun reportEvent(journal_id: String, title: String, desc: String) {
+    private fun reportJournal(journal_id: String, title: String, desc: String) {
         var token = tiny.getString("token")
         journalView.journalReport(journal_id.toInt(), token!!, title, desc)?.observe(lco) {
+            when (it.status) {
+                Status.ERROR -> {}
+                Status.LOADING -> {}
+                Status.SUCCESS -> {
+                    _activity.finish()
+                    Okprogress.visibility = View.GONE
+
+                    Toast.makeText(context, it?.data?.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun reportUser(userId: String, title: String, desc: String) {
+        var token = tiny.getString("token")
+        peopleView.userReport(userId.toInt(), title, desc , token!!)?.observe(lco) {
             when (it.status) {
                 Status.ERROR -> {}
                 Status.LOADING -> {}

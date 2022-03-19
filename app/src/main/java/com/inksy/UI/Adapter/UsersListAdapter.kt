@@ -12,12 +12,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.inksy.Interfaces.iOnClickListerner
 import com.inksy.Model.PeopleListModel
+import com.inksy.Model.UserModel
 import com.inksy.R
 import com.inksy.UI.Constants
 
 class UsersListAdapter(
     var context: Context,
-    var list: ArrayList<PeopleListModel>,
+    var list: ArrayList<UserModel>,
     var iOnClickListerner: iOnClickListerner,
     var followRequest: Boolean
 ) : RecyclerView.Adapter<UsersListAdapter.ViewHolder>() {
@@ -54,7 +55,7 @@ class UsersListAdapter(
 
 
             Glide.with(context).load(Constants.BASE_IMAGE + list[position].avatar)
-                .placeholder(ContextCompat.getDrawable(context, R.drawable.avatar_placeholder))
+                .placeholder(ContextCompat.getDrawable(context, R.drawable.ic_empty_user))
                 .into(holder.avatar)
 
             if (followRequest) {
@@ -71,6 +72,12 @@ class UsersListAdapter(
                 iOnClickListerner.onclick(position)
             }
 
+        }
+
+        holder.itemView.setOnClickListener(){
+            if (followRequest) {
+                iOnClickListerner.onclick(position)
+            }
         }
 
     }

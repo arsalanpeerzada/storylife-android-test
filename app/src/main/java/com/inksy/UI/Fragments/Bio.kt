@@ -15,8 +15,10 @@ import com.bumptech.glide.Glide
 import com.inksy.R
 import com.inksy.UI.Activities.MainActivity
 import com.inksy.UI.ViewModel.LoginView
+import com.inksy.Utils.FileUtil
 import com.inksy.Utils.TinyDB
 import com.inksy.databinding.FragmentBioBinding
+import java.io.File
 
 class Bio : Fragment() {
 
@@ -38,6 +40,8 @@ class Bio : Fragment() {
 
         binding = FragmentBioBinding.inflate(layoutInflater)
         tinyDB = TinyDB(requireContext())
+
+        cameraUri = Uri.parse("asdasdas")
         binding.button.setOnClickListener() {
             if (binding.name1.text.isNullOrEmpty()) {
                 binding.nameError.visibility = View.VISIBLE
@@ -47,28 +51,30 @@ class Bio : Fragment() {
             }
 
             if (!binding.name1.text.isNullOrEmpty() && !binding.summary.text.isNullOrEmpty()) {
-
+                binding.loader.visibility = View.VISIBLE
 
                 val token = tinyDB.getString("token")
+
+                var file: File = FileUtil.from(requireContext(), cameraUri)
 
                 loginView = ViewModelProviders.of(requireActivity())[LoginView::class.java]
                 loginView.init()
                 loginView.profile(
                     binding.name1.text.toString(),
                     binding.summary.text.toString(),
-                    " ",
+                    file,
                     token!!
                 )?.observe(requireActivity()) {
-
+                    binding.loader.visibility = View.GONE
                     if (it?.status == 1) {
 
                         tinyDB.putString("fullname", it.data?.fullName)
                         tinyDB.putString("bio", it?.data?.bio)
-                        tinyDB.putInt("isprofilecompleted",it.data?.isProfileCompleted!!)
+                        tinyDB.putInt("isprofilecompleted", it.data?.isProfileCompleted!!)
 
-                        if (it?.data?.avatar.isNullOrBlank()){
+                        if (it?.data?.avatar.isNullOrBlank()) {
 
-                        }else {
+                        } else {
                             tinyDB.putString("avatar", it?.data?.avatar)
                         }
 

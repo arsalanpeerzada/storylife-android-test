@@ -130,6 +130,162 @@ class PeopleRepo {
         return data
     }
 
+    fun forgotPassword(
+        email: String,
+        token: String?
+    ): MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>> {
+        val data: MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>> =
+            MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>>()
+
+        var mytoken = "Bearer $token"
+
+        apiInterface.forgotPassword(email, mytoken)
+            ?.enqueue(object : Callback<APIInterface.ApiResponse<JsonElement>> {
+                override fun onResponse(
+                    call: Call<APIInterface.ApiResponse<JsonElement>>,
+                    response: Response<APIInterface.ApiResponse<JsonElement>>
+                ) {
+                    if (response.body() != null) {
+                        val body: APIInterface.ApiResponse<JsonElement> = response.body()!!
+
+                        if (body.status == 1) {
+                            data.value = Resource.success(body)
+                        } else {
+                            data.value = Resource.error(body.message.toString(), null)
+                        }
+
+
+                    } else {
+                        val body: ResponseBody? = response.errorBody()
+                        try {
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            var string = jObjError.getString("message")
+
+                            data.value = Resource.error(string, null)
+                        } catch (e: Exception) {
+                            // Toast.makeText(getContext(), e.message, Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<APIInterface.ApiResponse<JsonElement>>,
+                    t: Throwable?
+                ) {
+                    var dataa = t?.message.toString()
+                    var mydata = t?.localizedMessage
+
+                    data.value = Resource.error(dataa, null)
+                }
+            })
+        return data
+    }
+
+    fun verifyCode(
+        code: String,
+        email: String,
+        token: String?
+    ): MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>> {
+        val data: MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>> =
+            MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>>()
+
+        var mytoken = "Bearer $token"
+
+        apiInterface.verifyCode(code, email, mytoken)
+            ?.enqueue(object : Callback<APIInterface.ApiResponse<JsonElement>> {
+                override fun onResponse(
+                    call: Call<APIInterface.ApiResponse<JsonElement>>,
+                    response: Response<APIInterface.ApiResponse<JsonElement>>
+                ) {
+                    if (response.body() != null) {
+                        val body: APIInterface.ApiResponse<JsonElement> = response.body()!!
+
+                        if (body.status == 1) {
+                            data.value = Resource.success(body)
+                        } else {
+                            data.value = Resource.error(body.message.toString(), null)
+                        }
+
+
+                    } else {
+                        val body: ResponseBody? = response.errorBody()
+                        try {
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            var string = jObjError.getString("message")
+
+                            data.value = Resource.error(string, null)
+                        } catch (e: Exception) {
+                            // Toast.makeText(getContext(), e.message, Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<APIInterface.ApiResponse<JsonElement>>,
+                    t: Throwable?
+                ) {
+                    var dataa = t?.message.toString()
+                    var mydata = t?.localizedMessage
+
+                    data.value = Resource.error(dataa, null)
+                }
+            })
+        return data
+    }
+
+    fun resetPassword(
+        password: String,
+        code: String,
+        email: String,
+        token: String?
+    ): MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>> {
+        val data: MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>> =
+            MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>>()
+
+        var mytoken = "Bearer $token"
+
+        apiInterface.resetPassword(password, code, email, mytoken)
+            ?.enqueue(object : Callback<APIInterface.ApiResponse<JsonElement>> {
+                override fun onResponse(
+                    call: Call<APIInterface.ApiResponse<JsonElement>>,
+                    response: Response<APIInterface.ApiResponse<JsonElement>>
+                ) {
+                    if (response.body() != null) {
+                        val body: APIInterface.ApiResponse<JsonElement> = response.body()!!
+
+                        if (body.status == 1) {
+                            data.value = Resource.success(body)
+                        } else {
+                            data.value = Resource.error(body.message.toString(), null)
+                        }
+
+
+                    } else {
+                        val body: ResponseBody? = response.errorBody()
+                        try {
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            var string = jObjError.getString("message")
+
+                            data.value = Resource.error(string, null)
+                        } catch (e: Exception) {
+                            // Toast.makeText(getContext(), e.message, Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<APIInterface.ApiResponse<JsonElement>>,
+                    t: Throwable?
+                ) {
+                    var dataa = t?.message.toString()
+                    var mydata = t?.localizedMessage
+
+                    data.value = Resource.error(dataa, null)
+                }
+            })
+        return data
+    }
+
     fun unblockUser(
         id: Int?,
         token: String?
@@ -286,20 +442,21 @@ class PeopleRepo {
 
     fun followRequests(
         token: String?
-    ): MutableLiveData<Resource<APIInterface.ApiResponse<List<PeopleListModel>>>> {
-        val data: MutableLiveData<Resource<APIInterface.ApiResponse<List<PeopleListModel>>>> =
-            MutableLiveData<Resource<APIInterface.ApiResponse<List<PeopleListModel>>>>()
+    ): MutableLiveData<Resource<APIInterface.ApiResponse<List<UserModel>>>> {
+        val data: MutableLiveData<Resource<APIInterface.ApiResponse<List<UserModel>>>> =
+            MutableLiveData<Resource<APIInterface.ApiResponse<List<UserModel>>>>()
 
         var mytoken = "Bearer $token"
 
         apiInterface.followRequests(mytoken)
-            ?.enqueue(object : Callback<APIInterface.ApiResponse<List<PeopleListModel>>> {
+            ?.enqueue(object : Callback<APIInterface.ApiResponse<List<UserModel>>> {
                 override fun onResponse(
-                    call: Call<APIInterface.ApiResponse<List<PeopleListModel>>>,
-                    response: Response<APIInterface.ApiResponse<List<PeopleListModel>>>
+                    call: Call<APIInterface.ApiResponse<List<UserModel>>>,
+                    response: Response<APIInterface.ApiResponse<List<UserModel>>>
                 ) {
                     if (response.body() != null) {
-                        val body: APIInterface.ApiResponse<List<PeopleListModel>> = response.body()!!
+                        val body: APIInterface.ApiResponse<List<UserModel>> =
+                            response.body()!!
 
                         if (body.status == 1) {
                             data.value = Resource.success(body)
@@ -322,7 +479,7 @@ class PeopleRepo {
                 }
 
                 override fun onFailure(
-                    call: Call<APIInterface.ApiResponse<List<PeopleListModel>>>,
+                    call: Call<APIInterface.ApiResponse<List<UserModel>>>,
                     t: Throwable?
                 ) {
                     var dataa = t?.message.toString()
@@ -337,20 +494,21 @@ class PeopleRepo {
 
     fun getBlockList(
         token: String?
-    ): MutableLiveData<Resource<APIInterface.ApiResponse<List<PeopleListModel>>>> {
-        val data: MutableLiveData<Resource<APIInterface.ApiResponse<List<PeopleListModel>>>> =
-            MutableLiveData<Resource<APIInterface.ApiResponse<List<PeopleListModel>>>>()
+    ): MutableLiveData<Resource<APIInterface.ApiResponse<List<UserModel>>>> {
+        val data: MutableLiveData<Resource<APIInterface.ApiResponse<List<UserModel>>>> =
+            MutableLiveData<Resource<APIInterface.ApiResponse<List<UserModel>>>>()
 
         var mytoken = "Bearer $token"
 
         apiInterface.blockList(mytoken)
-            ?.enqueue(object : Callback<APIInterface.ApiResponse<List<PeopleListModel>>> {
+            ?.enqueue(object : Callback<APIInterface.ApiResponse<List<UserModel>>> {
                 override fun onResponse(
-                    call: Call<APIInterface.ApiResponse<List<PeopleListModel>>>,
-                    response: Response<APIInterface.ApiResponse<List<PeopleListModel>>>
+                    call: Call<APIInterface.ApiResponse<List<UserModel>>>,
+                    response: Response<APIInterface.ApiResponse<List<UserModel>>>
                 ) {
                     if (response.body() != null) {
-                        val body: APIInterface.ApiResponse<List<PeopleListModel>> = response.body()!!
+                        val body: APIInterface.ApiResponse<List<UserModel>> =
+                            response.body()!!
 
                         if (body.status == 1) {
                             data.value = Resource.success(body)
@@ -373,7 +531,7 @@ class PeopleRepo {
                 }
 
                 override fun onFailure(
-                    call: Call<APIInterface.ApiResponse<List<PeopleListModel>>>,
+                    call: Call<APIInterface.ApiResponse<List<UserModel>>>,
                     t: Throwable?
                 ) {
                     var dataa = t?.message.toString()
@@ -382,6 +540,59 @@ class PeopleRepo {
                     data.value = Resource.error(dataa, null)
                 }
             })
+        return data
+    }
+
+    fun userReport(
+        user_Id: Int,
+        Title: String,
+        Description: String,
+        token: String
+    ): MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>> {
+        val data: MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>> =
+            MutableLiveData<Resource<APIInterface.ApiResponse<JsonElement>>>()
+        var mytoken = "Bearer $token"
+
+        apiInterface.userReport(user_Id!!, Title, Description, mytoken).enqueue(
+            object : Callback<APIInterface.ApiResponse<JsonElement>> {
+                override fun onResponse(
+                    call: Call<APIInterface.ApiResponse<JsonElement>>,
+                    response: Response<APIInterface.ApiResponse<JsonElement>>
+                ) {
+                    if (response.body() != null) {
+                        val body: APIInterface.ApiResponse<JsonElement> = response.body()!!
+
+                        if (body.status == 1) {
+                            data.value = Resource.success(body)
+                        } else {
+                            data.value = Resource.error(body.message.toString(), null)
+                        }
+
+
+                    } else {
+                        val body: ResponseBody? = response.errorBody()
+                        try {
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            var string = jObjError.getString("message")
+
+                            data.value = Resource.error(string, null)
+                        } catch (e: Exception) {
+                            // Toast.makeText(getContext(), e.message, Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<APIInterface.ApiResponse<JsonElement>>,
+                    t: Throwable
+                ) {
+                    var dataa = t?.message.toString()
+                    var mydata = t?.localizedMessage
+
+                    data.value = Resource.error(dataa, null)
+                }
+            }
+        )
         return data
     }
 

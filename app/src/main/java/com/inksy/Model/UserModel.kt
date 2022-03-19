@@ -2,6 +2,8 @@ package com.inksy.Model
 
 import com.example.example.Pack
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
+
 
 data class UserModel(
     @SerializedName("token") var token: String? = null,
@@ -20,12 +22,11 @@ data class UserModel(
     @SerializedName("following_count") var followingCount: Int? = null,
     @SerializedName("device_type") var deviceType: String? = null,
     @SerializedName("device_token") var deviceToken: String? = null,
+    @SerializedName("is_followed") var isFollowed: Int = 0,
     @SerializedName("is_private_profile") var isPrivateProfile: Int? = null,
     @SerializedName("is_profile_completed") var isProfileCompleted: Int? = null,
     @SerializedName("journals") var journals: ArrayList<Journals>? = null,
     @SerializedName("doodles") var doodles: ArrayList<Pack>? = null,
     @SerializedName("followers") var followers: ArrayList<UserModel>? = null,
-    @SerializedName("is_email_verification") var is_email_verification: Int? = null,
-
-
-    )
+    @SerializedName("is_email_verification") var is_email_verification: Int = 0,
+) : Serializable

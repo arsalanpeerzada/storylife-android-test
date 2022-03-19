@@ -60,18 +60,23 @@ class Profile : Fragment(), iOnClickListerner, OnChangeStateClickListener {
         peopleView = ViewModelProvider(this)[PeopleView::class.java]
         peopleView.init()
 
+        binding.loader.visibility = View.VISIBLE
         tinydb = TinyDB(requireContext())
         binding.name.text = tinydb.getString("fullname")
         binding.followpeople.text = "Followed by ${tinydb.getString("followers")} People"
         binding.points.text = tinydb.getString("points")
         binding.bio.text = tinydb.getString("bio")
-
+        if (!tinydb.getString("avatar").isNullOrEmpty()) {
+            Glide.with(requireContext()).load(Constants.BASE_IMAGE + tinydb.getString("avatar"))
+                .placeholder(R.drawable.ic_empty_user)
+                .into(binding.circleImageView)
+        }
         token = tinydb.getString("token")!!
         var id = tinydb.getString("id")!!.toInt()
         getdetails(id, token)
 
         editProfileView = ViewModelProviders.of(requireActivity())[EditProfileView::class.java]
-
+        editProfileView.init()
         var list = arrayOf(
             R.drawable.red_book,
             R.drawable.book_green,
@@ -82,7 +87,14 @@ class Profile : Fragment(), iOnClickListerner, OnChangeStateClickListener {
             R.drawable.red_book, R.drawable.book_green, R.drawable.book_blue,
         )
 
-        binding.createJournal.setOnClickListener {  requireContext().startActivity(Intent(requireContext(), CreateActivity::class.java)) }
+        binding.createJournal.setOnClickListener {
+            requireContext().startActivity(
+                Intent(
+                    requireContext(),
+                    CreateActivity::class.java
+                )
+            )
+        }
 //
 //        binding.rvFriends.adapter = BookAdapter(requireContext(), list, Constants.person, this)
 //
@@ -92,16 +104,30 @@ class Profile : Fragment(), iOnClickListerner, OnChangeStateClickListener {
 
 
         binding.seeall1.setOnClickListener {
-            requireContext().startActivity(Intent(requireContext(), ViewAll::class.java).putExtra(Constants.activity,
-                Constants.sub_journalViewAll))
+            requireContext().startActivity(
+                Intent(requireContext(), ViewAll::class.java).putExtra(
+                    Constants.activity,
+                    Constants.sub_journalViewAll
+                )
+            )
 
         }
         binding.seeall2.setOnClickListener {
-            requireContext().startActivity(Intent(requireContext(), ViewAll::class.java).putExtra(Constants.activity,Constants.sub_journalViewAll))
+            requireContext().startActivity(
+                Intent(requireContext(), ViewAll::class.java).putExtra(
+                    Constants.activity,
+                    Constants.sub_journalViewAll
+                )
+            )
 
         }
         binding.seeall3.setOnClickListener {
-            requireContext().startActivity(Intent(requireContext(), ViewAll::class.java).putExtra(Constants.activity,Constants.sub_journalViewAll))
+            requireContext().startActivity(
+                Intent(requireContext(), ViewAll::class.java).putExtra(
+                    Constants.activity,
+                    Constants.sub_journalViewAll
+                )
+            )
 
         }
 
@@ -116,6 +142,7 @@ class Profile : Fragment(), iOnClickListerner, OnChangeStateClickListener {
 
 
         binding.camera.setOnClickListener() {
+            binding.loader.visibility = View.VISIBLE
             val intent2 = Intent()
             intent2.type = "image/*"
             intent2.action = Intent.ACTION_GET_CONTENT
@@ -127,8 +154,7 @@ class Profile : Fragment(), iOnClickListerner, OnChangeStateClickListener {
 
         binding.followpeople.setOnClickListener() {
             var intent = Intent(requireContext(), ViewAll::class.java).putExtra(
-                "activity",
-                Constants.peopleViewAll
+                "activity", Constants.peopleViewAll
             )
             requireContext().startActivity(intent)
         }
@@ -138,6 +164,7 @@ class Profile : Fragment(), iOnClickListerner, OnChangeStateClickListener {
 
     fun getdetails(id: Int, token: String) {
         peopleView.userDetail(id, token)?.observe(requireActivity()) { it ->
+            binding.loader.visibility = View.GONE
             when (it.status) {
                 Status.ERROR -> {
 
@@ -159,7 +186,7 @@ class Profile : Fragment(), iOnClickListerner, OnChangeStateClickListener {
                         binding.rvFriends.visibility = View.GONE
                         binding.seeall1.visibility = View.GONE
 
-                         } else {
+                    } else {
                         binding.textView3.visibility = View.VISIBLE
                         binding.textView4.visibility = View.VISIBLE
                         binding.rvFriends.visibility = View.VISIBLE
@@ -231,13 +258,16 @@ class Profile : Fragment(), iOnClickListerner, OnChangeStateClickListener {
                             requestFile,
                             token!!
                         )?.observe(requireActivity()) {
+                            binding.loader.visibility = View.GONE
                             if (it?.status == 1) {
 
                                 tinydb.putString("avatar", it.data?.avatar)
-                                Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT)
+                                    .show()
 
                             } else {
-                                Toast.makeText(requireContext(), it?.message, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireContext(), it?.message, Toast.LENGTH_SHORT)
+                                    .show()
                             }
                         }
 
@@ -284,6 +314,7 @@ class Profile : Fragment(), iOnClickListerner, OnChangeStateClickListener {
             }
         }
     }
+
     override fun onclick(position: Int) {
         super.onclick(position)
         Comment_BottomSheet().show(childFragmentManager, " ");

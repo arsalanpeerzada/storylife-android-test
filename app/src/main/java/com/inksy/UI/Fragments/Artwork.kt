@@ -12,8 +12,10 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.bumptech.glide.Glide
 import com.example.example.DoodlePack
 import com.example.example.Pack
+import com.inksy.R
 import com.inksy.Remote.Status
 import com.inksy.UI.Activities.ProfileActivity
 import com.inksy.UI.Activities.ViewAll
@@ -44,15 +46,21 @@ class Artwork : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
+        binding = FragmentArtworkBinding.inflate(layoutInflater)
         doodleView = ViewModelProvider(requireActivity())[DoodleView::class.java]
         doodleView.init()
 
+        binding.loader.visibility = View.VISIBLE
         tinyDB = TinyDB(requireContext())
         token = tinyDB.getString("token").toString()
 
+        if (!tinyDB.getString("avatar").isNullOrEmpty()) {
+            Glide.with(requireContext()).load(Constants.BASE_IMAGE + tinyDB.getString("avatar"))
+                .placeholder(R.drawable.ic_empty_user)
+                .into(binding.profile)
+        }
 
-        binding = FragmentArtworkBinding.inflate(layoutInflater)
+
 
 
 
@@ -126,6 +134,7 @@ class Artwork : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     fun getData(token: String) {
 
         doodleView.getData(token)?.observe(requireActivity()) {
+            binding.loader.visibility = View.GONE
             when (it.status) {
                 Status.SUCCESS -> {
                     feature = it?.data?.data?.featuredPack!!
